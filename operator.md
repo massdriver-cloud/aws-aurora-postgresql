@@ -20,7 +20,7 @@ ACU - 2GB / 1 ACU
 * No support for non-Aurora Clusters (See RDS Bundle)
 * No blue/green support as it is not supported for [PostgreSQL yet](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/blue-green-deployments-overview.html)
 * Instances AZs are auto-assigned by AWS
-* 2 artifacts, one for the writer, one for the readers. If no readers the writer will be present here so you can 
+* 2 artifacts, one for the writer, one for the readers. If no readers the writer will be present here so you can
   * For applications that dont use load balanced reader, the writer endpoint can be read from
 
 ## Caveats
@@ -49,7 +49,7 @@ ACU - 2GB / 1 ACU
 PUNT:
 * [ ] RDS Proxy
 * [ ] extract as public module
-* [ ] IAM Auth 
+* [ ] IAM Auth
   * https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.IAMDBAuth.IAMPolicy.html
   * https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.IAMDBAuth.DBAccounts.html
 * [ ] automated backups

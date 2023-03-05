@@ -14,7 +14,7 @@ $instance_classes = {}
 $mdyaml = "massdriver.yaml"
 conf = YAML.load(File.read($mdyaml))
 
-def maybe_get_data(cmd, file, force) 
+def maybe_get_data(cmd, file, force)
   if !File.exists?(file) || force
     `#{cmd} > #{file}`
   else
@@ -22,7 +22,7 @@ def maybe_get_data(cmd, file, force)
   end
 end
 
-def read_json_file(file) 
+def read_json_file(file)
   JSON.parse(File.read(file))
 end
 
@@ -31,7 +31,7 @@ def instance_details_file(joined_list_of_instances)
   "/tmp/aws-rds-#{$engine}-instances-details-#{hash}.json"
 end
 
-def engine_version_instance_file(v) 
+def engine_version_instance_file(v)
   "/tmp/aws-rds-#{$engine}-#{v}-instances.json"
 end
 
@@ -43,23 +43,23 @@ def transform_instance_class_from(t, from)
       nil
     elsif t =~ /^x2g/
       t.gsub("x2g", "x2gd")
-    else 
+    else
       t
-    end    
+    end
   elsif from == :ec2
     t = if t =~ /^x2gd/
       t.gsub("x2gd", "x2g")
-    else 
+    else
       t
     end
-    "db.#{t}"    
+    "db.#{t}"
   else
     t
   end
 end
 
 ## Get Engine Versions
-maybe_get_data("aws rds describe-db-engine-versions --engine #{$engine} --region #{$region}", $engines_file, $force) 
+maybe_get_data("aws rds describe-db-engine-versions --engine #{$engine} --region #{$region}", $engines_file, $force)
 engines = read_json_file($engines_file)
 
 versions = engines["DBEngineVersions"]
@@ -84,14 +84,14 @@ supported_engine_versions.each do |engine_version|
   instances = read_json_file(instances_file)
 
   supported_engine_versions_to_instance_class_map[engine_version] = []
-  
+
   instances["OrderableDBInstanceOptions"].each do |v|
     next if !supported_engine_versions.member?(v["EngineVersion"])
     rds_instance_class = v["DBInstanceClass"]
 
     supported_engine_versions_to_instance_class_map[engine_version].push(rds_instance_class)
 
-    if rds_instance_class == "db.serverless" 
+    if rds_instance_class == "db.serverless"
       $instance_classes[rds_instance_class] = {
         RDSInstanceType: rds_instance_class,
         EC2InstanceType: nil,
@@ -114,7 +114,7 @@ $instance_classes.each_slice(100) do |instance_class_chunk|
 
   puts "Getting details for chunk: #{joined_for_cli}"
   file = instance_details_file(joined_for_cli)
-  maybe_get_data("aws ec2 describe-instance-types --instance-types #{joined_for_cli} --region #{$region}", file, $force) 
+  maybe_get_data("aws ec2 describe-instance-types --instance-types #{joined_for_cli} --region #{$region}", file, $force)
   details = read_json_file(file)
 
   details["InstanceTypes"].each do |deets|
@@ -152,7 +152,7 @@ supported_engine_versions.each do |version|
   prev = conf["params"]["properties"]["database"]["dependencies"]["version"]["oneOf"]
   instance_classes_with_details = supported_engine_versions_to_instance_class_map[version].map {|v| $instance_classes[v]}
 
-  sorted_instance_classes_with_details = instance_classes_with_details.sort { |a,b| 
+  sorted_instance_classes_with_details = instance_classes_with_details.sort { |a,b|
     [a[:DefaultVCpus], a[:SizeInGiB]] <=> [b[:DefaultVCpus] , b[:SizeInGiB]]
   }
 

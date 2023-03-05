@@ -23,7 +23,7 @@ resource "aws_rds_cluster_instance" "instance" {
   # TODO: field? how does an old value effect this? on redeploy?
   auto_minor_version_upgrade = false
 
-  # TODO: 
+  # TODO:
   # "rds-ca-rsa2048-g1",
   # "rds-ca-ecc384-g1",
   # "rds-ca-rsa4096-g1"

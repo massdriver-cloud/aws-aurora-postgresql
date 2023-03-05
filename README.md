@@ -52,8 +52,89 @@ Form input parameters for configuring a bundle for deployment.
 <summary>View</summary>
 
 <!-- PARAMS:START -->
+## Properties
 
-**Params coming soon**
+- **`backup`** *(object)*
+  - **`retention_period`** *(integer)*: The days to retain backups for. Minimum: `0`. Maximum: `35`. Default: `7`.
+  - **`skip_final_snapshot`** *(boolean)*: Determines whether a final DB snapshot is created before the DB cluster is deleted. If true is specified, no DB snapshot is created. Default: `False`.
+- **`database`** *(object)*
+  - **`deletion_protection`** *(boolean)*: Explicitly requires this field to be unset before allowing deletion. Default: `True`.
+  - **`instance_class`** *(string)*: The instance class of the Aurora RDS Cluster instances.
+    - **One of**
+      - Burstable 2 vCPUs, 4 GiB (db.t3.medium)
+      - Burstable 2 vCPUs, 4 GiB (db.t4g.medium)
+      - Burstable 2 vCPUs, 8 GiB (db.t3.large)
+      - Burstable 2 vCPUs, 8 GiB (db.t4g.large)
+      - Memory Optimized 2 vCPUs, 15 GiB (db.r4.large)
+      - Memory Optimized 2 vCPUs, 16 GiB (db.r6g.large)
+      - Memory Optimized 2 vCPUs, 16 GiB (db.r5.large)
+      - Memory Optimized 2 vCPUs, 16 GiB (db.r6i.large)
+      - Memory Optimized 4 vCPUs, 30 GiB (db.r4.xlarge)
+      - Memory Optimized 4 vCPUs, 32 GiB (db.r6g.xlarge)
+      - Memory Optimized 4 vCPUs, 32 GiB (db.r5.xlarge)
+      - Memory Optimized 4 vCPUs, 32 GiB (db.r6i.xlarge)
+      - Memory Optimized 8 vCPUs, 61 GiB (db.r4.2xlarge)
+      - Memory Optimized 8 vCPUs, 64 GiB (db.r5.2xlarge)
+      - Memory Optimized 8 vCPUs, 64 GiB (db.r6g.2xlarge)
+      - Memory Optimized 8 vCPUs, 64 GiB (db.r6i.2xlarge)
+      - Memory Optimized 16 vCPUs, 122 GiB (db.r4.4xlarge)
+      - Memory Optimized 16 vCPUs, 128 GiB (db.r5.4xlarge)
+      - Memory Optimized 16 vCPUs, 128 GiB (db.r6g.4xlarge)
+      - Memory Optimized 16 vCPUs, 128 GiB (db.r6i.4xlarge)
+      - Memory Optimized 32 vCPUs, 244 GiB (db.r4.8xlarge)
+      - Memory Optimized 32 vCPUs, 256 GiB (db.r5.8xlarge)
+      - Memory Optimized 32 vCPUs, 256 GiB (db.r6i.8xlarge)
+      - Memory Optimized 32 vCPUs, 256 GiB (db.r6g.8xlarge)
+      - Memory Optimized 48 vCPUs, 384 GiB (db.r6i.12xlarge)
+      - Memory Optimized 48 vCPUs, 384 GiB (db.r6g.12xlarge)
+      - Memory Optimized 48 vCPUs, 384 GiB (db.r5.12xlarge)
+      - Memory Optimized 64 vCPUs, 488 GiB (db.r4.16xlarge)
+      - Memory Optimized 64 vCPUs, 512 GiB (db.r6i.16xlarge)
+      - Memory Optimized 64 vCPUs, 512 GiB (db.r5.16xlarge)
+      - Memory Optimized 64 vCPUs, 512 GiB (db.r6g.16xlarge)
+      - Memory Optimized 96 vCPUs, 768 GiB (db.r6i.24xlarge)
+      - Memory Optimized 96 vCPUs, 768 GiB (db.r5.24xlarge)
+      - Memory Optimized 128 vCPUs, 1024 GiB (db.r6i.32xlarge)
+  - **`name`** *(string)*
+  - **`version`** *(string)*: Must be one of: `['10.21', '11.9', '11.12', '11.13', '11.14', '11.15', '11.16', '11.17', '11.18', '12.7', '12.8', '12.9', '12.10', '12.11', '12.12', '12.13', '13.3', '13.4', '13.5', '13.6', '13.7', '13.8', '13.9', '14.3', '14.4', '14.5', '14.6']`. Default: `14.6`.
+- **`networking`** *(object)*
+  - **`subnet_type`** *(string)*: Deploy to internal subnets (cannot reach the internet) or private subnets (internet egress traffic allowed). Must be one of: `['internal', 'private']`. Default: `internal`.
+- **`observability`** *(object)*
+  - **`enable_cloudwatch_logs_export`** *(boolean)*: Default: `True`.
+  - **`enhanced_monitoring_interval`** *(integer)*: Monitor the operating system of DB instances in real time. Enhanced Monitoring is stored in Cloudwatch Logs and may incur additional changes. [Learn more](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Monitoring.OS.html). Default: `0`.
+    - **One of**
+      - Disabled
+      - 1 second
+      - 5 seconds
+      - 10 seconds
+      - 15 seconds
+      - 30 seconds
+      - 60 seconds
+## Examples
+
+  ```json
+  {
+      "__name": "Development",
+      "database": {
+          "deletion_protection": true
+      },
+      "networking": {
+          "subnet_type": "internal"
+      }
+  }
+  ```
+
+  ```json
+  {
+      "__name": "Production",
+      "database": {
+          "deletion_protection": true
+      },
+      "networking": {
+          "subnet_type": "internal"
+      }
+  }
+  ```
 
 <!-- PARAMS:END -->
 
@@ -67,8 +148,151 @@ Connections from other bundles that this bundle depends on.
 <summary>View</summary>
 
 <!-- CONNECTIONS:START -->
+## Properties
 
-**Connections coming soon**
+- **`aws_authentication`** *(object)*: . Cannot contain additional properties.
+  - **`data`** *(object)*
+    - **`arn`** *(string)*: Amazon Resource Name.
+
+      Examples:
+      ```json
+      "arn:aws:rds::ACCOUNT_NUMBER:db/prod"
+      ```
+
+      ```json
+      "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
+      ```
+
+    - **`external_id`** *(string)*: An external ID is a piece of data that can be passed to the AssumeRole API of the Security Token Service (STS). You can then use the external ID in the condition element in a role's trust policy, allowing the role to be assumed only when a certain value is present in the external ID.
+  - **`specs`** *(object)*
+    - **`aws`** *(object)*: .
+      - **`region`** *(string)*: AWS Region to provision in.
+
+        Examples:
+        ```json
+        "us-west-2"
+        ```
+
+- **`vpc`** *(object)*: . Cannot contain additional properties.
+  - **`data`** *(object)*
+    - **`infrastructure`** *(object)*
+      - **`arn`** *(string)*: Amazon Resource Name.
+
+        Examples:
+        ```json
+        "arn:aws:rds::ACCOUNT_NUMBER:db/prod"
+        ```
+
+        ```json
+        "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
+        ```
+
+      - **`cidr`** *(string)*
+
+        Examples:
+        ```json
+        "10.100.0.0/16"
+        ```
+
+        ```json
+        "192.24.12.0/22"
+        ```
+
+      - **`internal_subnets`** *(array)*
+        - **Items** *(object)*: AWS VCP Subnet.
+          - **`arn`** *(string)*: Amazon Resource Name.
+
+            Examples:
+            ```json
+            "arn:aws:rds::ACCOUNT_NUMBER:db/prod"
+            ```
+
+            ```json
+            "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
+            ```
+
+          - **`aws_zone`** *(string)*: AWS Availability Zone.
+
+            Examples:
+          - **`cidr`** *(string)*
+
+            Examples:
+            ```json
+            "10.100.0.0/16"
+            ```
+
+            ```json
+            "192.24.12.0/22"
+            ```
+
+
+          Examples:
+      - **`private_subnets`** *(array)*
+        - **Items** *(object)*: AWS VCP Subnet.
+          - **`arn`** *(string)*: Amazon Resource Name.
+
+            Examples:
+            ```json
+            "arn:aws:rds::ACCOUNT_NUMBER:db/prod"
+            ```
+
+            ```json
+            "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
+            ```
+
+          - **`aws_zone`** *(string)*: AWS Availability Zone.
+
+            Examples:
+          - **`cidr`** *(string)*
+
+            Examples:
+            ```json
+            "10.100.0.0/16"
+            ```
+
+            ```json
+            "192.24.12.0/22"
+            ```
+
+
+          Examples:
+      - **`public_subnets`** *(array)*
+        - **Items** *(object)*: AWS VCP Subnet.
+          - **`arn`** *(string)*: Amazon Resource Name.
+
+            Examples:
+            ```json
+            "arn:aws:rds::ACCOUNT_NUMBER:db/prod"
+            ```
+
+            ```json
+            "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
+            ```
+
+          - **`aws_zone`** *(string)*: AWS Availability Zone.
+
+            Examples:
+          - **`cidr`** *(string)*
+
+            Examples:
+            ```json
+            "10.100.0.0/16"
+            ```
+
+            ```json
+            "192.24.12.0/22"
+            ```
+
+
+          Examples:
+  - **`specs`** *(object)*
+    - **`aws`** *(object)*: .
+      - **`region`** *(string)*: AWS Region to provision in.
+
+        Examples:
+        ```json
+        "us-west-2"
+        ```
 
 <!-- CONNECTIONS:END -->
 
@@ -82,8 +306,347 @@ Resources created by this bundle that can be connected to other bundles.
 <summary>View</summary>
 
 <!-- ARTIFACTS:START -->
+## Properties
 
-**Artifacts coming soon**
+- **`readers`** *(object)*: Authentication parameters for a PostgreSQL database. Cannot contain additional properties.
+  - **`data`** *(object)*: Cannot contain additional properties.
+    - **`authentication`** *(object)*
+      - **`hostname`** *(string)*
+      - **`password`** *(string)*
+      - **`port`** *(integer)*: Port number. Minimum: `0`. Maximum: `65535`.
+      - **`username`** *(string)*
+    - **`infrastructure`** *(object)*: Cloud specific PostgreSQL configuration data.
+      - **One of**
+        - AWS Infrastructure ARN*object*: Minimal AWS Infrastructure Config. Cannot contain additional properties.
+          - **`arn`** *(string)*: Amazon Resource Name.
+
+            Examples:
+            ```json
+            "arn:aws:rds::ACCOUNT_NUMBER:db/prod"
+            ```
+
+            ```json
+            "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
+            ```
+
+        - GCP Infrastructure Name*object*: GCP Infrastructure Config For Resources With A Name Not A GRN. Cannot contain additional properties.
+          - **`name`** *(string)*: Name Of GCP Resource.
+
+            Examples:
+            ```json
+            "my-cloud-function"
+            ```
+
+            ```json
+            "my-sql-instance"
+            ```
+
+        - Azure Infrastructure Resource ID*object*: Minimal Azure Infrastructure Config. Cannot contain additional properties.
+          - **`ari`** *(string)*: Azure Resource ID.
+
+            Examples:
+            ```json
+            "/subscriptions/12345678-1234-1234-abcd-1234567890ab/resourceGroups/resource-group-name/providers/Microsoft.Network/virtualNetworks/network-name"
+            ```
+
+        - Kuberenetes infrastructure config*object*: . Cannot contain additional properties.
+          - **`kubernetes_namespace`** *(string)*
+          - **`kubernetes_service`** *(string)*
+    - **`security`** *(object)*: TBD.
+      - **Any of**
+        - AWS Security information*object*: Informs downstream services of network and/or IAM policies. Cannot contain additional properties.
+          - **`iam`** *(object)*: IAM Policies. Cannot contain additional properties.
+            - **`^[a-z-/]+$`** *(object)*
+              - **`policy_arn`** *(string)*: AWS IAM policy ARN.
+
+                Examples:
+                ```json
+                "arn:aws:rds::ACCOUNT_NUMBER:db/prod"
+                ```
+
+                ```json
+                "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
+                ```
+
+          - **`identity`** *(object)*: For instances where IAM policies must be attached to a role attached to an AWS resource, for instance AWS Eventbridge to Firehose, this attribute should be used to allow the downstream to attach it's policies (Firehose) directly to the IAM role created by the upstream (Eventbridge). It is important to remember that connections in massdriver are one way, this scheme perserves the dependency relationship while allowing bundles to control the lifecycles of resources under it's management. Cannot contain additional properties.
+            - **`role_arn`** *(string)*: ARN for this resources IAM Role.
+
+              Examples:
+              ```json
+              "arn:aws:rds::ACCOUNT_NUMBER:db/prod"
+              ```
+
+              ```json
+              "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
+              ```
+
+          - **`network`** *(object)*: AWS security group rules to inform downstream services of ports to open for communication. Cannot contain additional properties.
+            - **`^[a-z-]+$`** *(object)*
+              - **`arn`** *(string)*: Amazon Resource Name.
+
+                Examples:
+                ```json
+                "arn:aws:rds::ACCOUNT_NUMBER:db/prod"
+                ```
+
+                ```json
+                "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
+                ```
+
+              - **`port`** *(integer)*: Port number. Minimum: `0`. Maximum: `65535`.
+              - **`protocol`** *(string)*: Must be one of: `['tcp', 'udp']`.
+        - Security*object*: Azure Security Configuration. Cannot contain additional properties.
+          - **`iam`** *(object)*: IAM Roles And Scopes. Cannot contain additional properties.
+            - **`^[a-z]+[a-z_]*[a-z]$`** *(object)*
+              - **`role`**: Azure Role.
+
+                Examples:
+                ```json
+                "Storage Blob Data Reader"
+                ```
+
+              - **`scope`** *(string)*: Azure IAM Scope.
+        - Security*object*: GCP Security Configuration. Cannot contain additional properties.
+          - **`iam`** *(object)*: IAM Roles And Conditions. Cannot contain additional properties.
+            - **`^[a-z-/]+$`** *(object)*
+              - **`condition`** *(string)*: GCP IAM Condition.
+              - **`role`**: GCP Role.
+
+                Examples:
+                ```json
+                "roles/owner"
+                ```
+
+                ```json
+                "roles/redis.editor"
+                ```
+
+                ```json
+                "roles/storage.objectCreator"
+                ```
+
+                ```json
+                "roles/storage.legacyObjectReader"
+                ```
+
+  - **`specs`** *(object)*: Cannot contain additional properties.
+    - **`rdbms`** *(object)*: Common metadata for relational databases.
+      - **`engine`** *(string)*: The type of database server.
+
+        Examples:
+        ```json
+        "postgresql"
+        ```
+
+        ```json
+        "mysql"
+        ```
+
+      - **`engine_version`** *(string)*: The cloud provider's database version.
+
+        Examples:
+        ```json
+        "5.7.mysql_aurora.2.03.2"
+        ```
+
+      - **`version`** *(string)*: The database version. Default: ``.
+
+        Examples:
+        ```json
+        "12.2"
+        ```
+
+        ```json
+        "5.7"
+        ```
+
+
+      Examples:
+      ```json
+      {
+          "engine": "postgresql",
+          "engine_version": "10.14",
+          "version": "10.14"
+      }
+      ```
+
+      ```json
+      {
+          "engine": "mysql",
+          "engine_version": "5.7.mysql_aurora.2.03.2",
+          "version": "5.7"
+      }
+      ```
+
+- **`writer`** *(object)*: Authentication parameters for a PostgreSQL database. Cannot contain additional properties.
+  - **`data`** *(object)*: Cannot contain additional properties.
+    - **`authentication`** *(object)*
+      - **`hostname`** *(string)*
+      - **`password`** *(string)*
+      - **`port`** *(integer)*: Port number. Minimum: `0`. Maximum: `65535`.
+      - **`username`** *(string)*
+    - **`infrastructure`** *(object)*: Cloud specific PostgreSQL configuration data.
+      - **One of**
+        - AWS Infrastructure ARN*object*: Minimal AWS Infrastructure Config. Cannot contain additional properties.
+          - **`arn`** *(string)*: Amazon Resource Name.
+
+            Examples:
+            ```json
+            "arn:aws:rds::ACCOUNT_NUMBER:db/prod"
+            ```
+
+            ```json
+            "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
+            ```
+
+        - GCP Infrastructure Name*object*: GCP Infrastructure Config For Resources With A Name Not A GRN. Cannot contain additional properties.
+          - **`name`** *(string)*: Name Of GCP Resource.
+
+            Examples:
+            ```json
+            "my-cloud-function"
+            ```
+
+            ```json
+            "my-sql-instance"
+            ```
+
+        - Azure Infrastructure Resource ID*object*: Minimal Azure Infrastructure Config. Cannot contain additional properties.
+          - **`ari`** *(string)*: Azure Resource ID.
+
+            Examples:
+            ```json
+            "/subscriptions/12345678-1234-1234-abcd-1234567890ab/resourceGroups/resource-group-name/providers/Microsoft.Network/virtualNetworks/network-name"
+            ```
+
+        - Kuberenetes infrastructure config*object*: . Cannot contain additional properties.
+          - **`kubernetes_namespace`** *(string)*
+          - **`kubernetes_service`** *(string)*
+    - **`security`** *(object)*: TBD.
+      - **Any of**
+        - AWS Security information*object*: Informs downstream services of network and/or IAM policies. Cannot contain additional properties.
+          - **`iam`** *(object)*: IAM Policies. Cannot contain additional properties.
+            - **`^[a-z-/]+$`** *(object)*
+              - **`policy_arn`** *(string)*: AWS IAM policy ARN.
+
+                Examples:
+                ```json
+                "arn:aws:rds::ACCOUNT_NUMBER:db/prod"
+                ```
+
+                ```json
+                "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
+                ```
+
+          - **`identity`** *(object)*: For instances where IAM policies must be attached to a role attached to an AWS resource, for instance AWS Eventbridge to Firehose, this attribute should be used to allow the downstream to attach it's policies (Firehose) directly to the IAM role created by the upstream (Eventbridge). It is important to remember that connections in massdriver are one way, this scheme perserves the dependency relationship while allowing bundles to control the lifecycles of resources under it's management. Cannot contain additional properties.
+            - **`role_arn`** *(string)*: ARN for this resources IAM Role.
+
+              Examples:
+              ```json
+              "arn:aws:rds::ACCOUNT_NUMBER:db/prod"
+              ```
+
+              ```json
+              "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
+              ```
+
+          - **`network`** *(object)*: AWS security group rules to inform downstream services of ports to open for communication. Cannot contain additional properties.
+            - **`^[a-z-]+$`** *(object)*
+              - **`arn`** *(string)*: Amazon Resource Name.
+
+                Examples:
+                ```json
+                "arn:aws:rds::ACCOUNT_NUMBER:db/prod"
+                ```
+
+                ```json
+                "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
+                ```
+
+              - **`port`** *(integer)*: Port number. Minimum: `0`. Maximum: `65535`.
+              - **`protocol`** *(string)*: Must be one of: `['tcp', 'udp']`.
+        - Security*object*: Azure Security Configuration. Cannot contain additional properties.
+          - **`iam`** *(object)*: IAM Roles And Scopes. Cannot contain additional properties.
+            - **`^[a-z]+[a-z_]*[a-z]$`** *(object)*
+              - **`role`**: Azure Role.
+
+                Examples:
+                ```json
+                "Storage Blob Data Reader"
+                ```
+
+              - **`scope`** *(string)*: Azure IAM Scope.
+        - Security*object*: GCP Security Configuration. Cannot contain additional properties.
+          - **`iam`** *(object)*: IAM Roles And Conditions. Cannot contain additional properties.
+            - **`^[a-z-/]+$`** *(object)*
+              - **`condition`** *(string)*: GCP IAM Condition.
+              - **`role`**: GCP Role.
+
+                Examples:
+                ```json
+                "roles/owner"
+                ```
+
+                ```json
+                "roles/redis.editor"
+                ```
+
+                ```json
+                "roles/storage.objectCreator"
+                ```
+
+                ```json
+                "roles/storage.legacyObjectReader"
+                ```
+
+  - **`specs`** *(object)*: Cannot contain additional properties.
+    - **`rdbms`** *(object)*: Common metadata for relational databases.
+      - **`engine`** *(string)*: The type of database server.
+
+        Examples:
+        ```json
+        "postgresql"
+        ```
+
+        ```json
+        "mysql"
+        ```
+
+      - **`engine_version`** *(string)*: The cloud provider's database version.
+
+        Examples:
+        ```json
+        "5.7.mysql_aurora.2.03.2"
+        ```
+
+      - **`version`** *(string)*: The database version. Default: ``.
+
+        Examples:
+        ```json
+        "12.2"
+        ```
+
+        ```json
+        "5.7"
+        ```
+
+
+      Examples:
+      ```json
+      {
+          "engine": "postgresql",
+          "engine_version": "10.14",
+          "version": "10.14"
+      }
+      ```
+
+      ```json
+      {
+          "engine": "mysql",
+          "engine_version": "5.7.mysql_aurora.2.03.2",
+          "version": "5.7"
+      }
+      ```
 
 <!-- ARTIFACTS:END -->
 

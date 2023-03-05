@@ -9,7 +9,7 @@ resource "aws_appautoscaling_target" "main" {
 }
 
 resource "aws_appautoscaling_policy" "main" {
-  # TODO: 
+  # TODO:
   name               = var.md_metadata.name_prefix
   policy_type        = "TargetTrackingScaling"
   resource_id        = "cluster:${aws_rds_cluster.main.cluster_identifier}"
@@ -18,7 +18,7 @@ resource "aws_appautoscaling_policy" "main" {
 
   target_tracking_scaling_policy_configuration {
     predefined_metric_specification {
-      # TODO: 
+      # TODO:
       predefined_metric_type = "RDSReaderAverageDatabaseConnections"
       # predefined_metric_type = var.predefined_metric_type
     }
@@ -32,8 +32,8 @@ resource "aws_appautoscaling_policy" "main" {
     target_value = 100
 
     # TODO:
-    # target_value       = var.predefined_metric_type == "RDSReaderAverageCPUUtilization" ? 
-    #   var.autoscaling_target_cpu : 
+    # target_value       = var.predefined_metric_type == "RDSReaderAverageCPUUtilization" ?
+    #   var.autoscaling_target_cpu :
     #   var.autoscaling_target_connections
   }
 
