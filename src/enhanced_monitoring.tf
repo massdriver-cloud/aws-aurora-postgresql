@@ -24,15 +24,14 @@ data "aws_iam_policy_document" "rds_enhanced_monitoring" {
       identifiers = ["monitoring.rds.amazonaws.com"]
     }
 
-    # TODO: scope
-    # condition {
-    #   test     = "StringLike"
-    #   variable = "aws:SourceArn"
+    condition {
+      test     = "StringLike"
+      variable = "aws:SourceArn"
 
-    #   values = [
-    #     "arn:aws:rds:${var.network.specs.aws.region}:${data.aws_caller_identity.current.account_id}:db:${var.md_metadata.name_prefix}"
-    #   ]
-    # }
+      values = [
+        "arn:aws:rds:${var.vpc.specs.aws.region}:${data.aws_caller_identity.current.account_id}:db:${var.md_metadata.name_prefix}*"
+      ]
+    }
 
     condition {
       test     = "StringEquals"

@@ -13,4 +13,6 @@ locals {
 
   final_snapshot_identifier   = "${var.md_metadata.name_prefix}-${element(concat(random_id.snapshot_identifier.*.hex, [""]), 0)}"
   enhanced_monitoring_enabled = var.observability.enhanced_monitoring_interval > 0
+
+  is_serverless = var.database.instance_class == "db.serverless"
 }

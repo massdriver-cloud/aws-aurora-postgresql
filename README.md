@@ -9,13 +9,15 @@
 [![Issues][issues_shield]][issues_url]
 [![MIT License][license_shield]][license_url]
 
-FOO
+Amazon Aurora is a fully managed relational database engine that's compatible with PostgreSQL. Aurora includes a high-performance storage subsystem. Its PostgreSQL-compatible database engines are customized to take advantage of that fast distributed storage. The underlying storage grows automatically as needed. An Aurora cluster volume can grow to a maximum size of 128 tebibytes (TiB). Aurora also automates and standardizes database clustering and replication, which are typically among the most challenging aspects of database configuration and administration.
 
 ---
 
+_Note:_ Engine versions and applicable instance types in `massdriver.yaml` are generated via scripts in `hack/`.
+
 ## Design
 
-For detailed information, check out our [Operator Guide](operator.mdx) for this bundle.
+For detailed information, check out our [Operator Guide](operator.md) for this bundle.
 
 ## Usage
 
@@ -58,45 +60,24 @@ Form input parameters for configuring a bundle for deployment.
   - **`retention_period`** *(integer)*: The days to retain backups for. Minimum: `0`. Maximum: `35`. Default: `7`.
   - **`skip_final_snapshot`** *(boolean)*: Determines whether a final DB snapshot is created before the DB cluster is deleted. If true is specified, no DB snapshot is created. Default: `False`.
 - **`database`** *(object)*
-  - **`deletion_protection`** *(boolean)*: Explicitly requires this field to be unset before allowing deletion. Default: `True`.
-  - **`instance_class`** *(string)*: The instance class of the Aurora RDS Cluster instances.
+  - **`ca_cert_identifier`** *(string)*: The identifier of the CA certificate for the DB instances. [Learn more](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html). Default: `rds-ca-rsa2048-g1`.
     - **One of**
-      - Burstable 2 vCPUs, 4 GiB (db.t3.medium)
-      - Burstable 2 vCPUs, 4 GiB (db.t4g.medium)
-      - Burstable 2 vCPUs, 8 GiB (db.t3.large)
-      - Burstable 2 vCPUs, 8 GiB (db.t4g.large)
-      - Memory Optimized 2 vCPUs, 15 GiB (db.r4.large)
-      - Memory Optimized 2 vCPUs, 16 GiB (db.r6g.large)
-      - Memory Optimized 2 vCPUs, 16 GiB (db.r5.large)
-      - Memory Optimized 2 vCPUs, 16 GiB (db.r6i.large)
-      - Memory Optimized 4 vCPUs, 30 GiB (db.r4.xlarge)
-      - Memory Optimized 4 vCPUs, 32 GiB (db.r6g.xlarge)
-      - Memory Optimized 4 vCPUs, 32 GiB (db.r5.xlarge)
-      - Memory Optimized 4 vCPUs, 32 GiB (db.r6i.xlarge)
-      - Memory Optimized 8 vCPUs, 61 GiB (db.r4.2xlarge)
-      - Memory Optimized 8 vCPUs, 64 GiB (db.r5.2xlarge)
-      - Memory Optimized 8 vCPUs, 64 GiB (db.r6g.2xlarge)
-      - Memory Optimized 8 vCPUs, 64 GiB (db.r6i.2xlarge)
-      - Memory Optimized 16 vCPUs, 122 GiB (db.r4.4xlarge)
-      - Memory Optimized 16 vCPUs, 128 GiB (db.r5.4xlarge)
-      - Memory Optimized 16 vCPUs, 128 GiB (db.r6g.4xlarge)
-      - Memory Optimized 16 vCPUs, 128 GiB (db.r6i.4xlarge)
-      - Memory Optimized 32 vCPUs, 244 GiB (db.r4.8xlarge)
-      - Memory Optimized 32 vCPUs, 256 GiB (db.r5.8xlarge)
-      - Memory Optimized 32 vCPUs, 256 GiB (db.r6i.8xlarge)
-      - Memory Optimized 32 vCPUs, 256 GiB (db.r6g.8xlarge)
-      - Memory Optimized 48 vCPUs, 384 GiB (db.r6i.12xlarge)
-      - Memory Optimized 48 vCPUs, 384 GiB (db.r6g.12xlarge)
-      - Memory Optimized 48 vCPUs, 384 GiB (db.r5.12xlarge)
-      - Memory Optimized 64 vCPUs, 488 GiB (db.r4.16xlarge)
-      - Memory Optimized 64 vCPUs, 512 GiB (db.r6i.16xlarge)
-      - Memory Optimized 64 vCPUs, 512 GiB (db.r5.16xlarge)
-      - Memory Optimized 64 vCPUs, 512 GiB (db.r6g.16xlarge)
-      - Memory Optimized 96 vCPUs, 768 GiB (db.r6i.24xlarge)
-      - Memory Optimized 96 vCPUs, 768 GiB (db.r5.24xlarge)
-      - Memory Optimized 128 vCPUs, 1024 GiB (db.r6i.32xlarge)
-  - **`name`** *(string)*
-  - **`version`** *(string)*: Must be one of: `['10.21', '11.9', '11.12', '11.13', '11.14', '11.15', '11.16', '11.17', '11.18', '12.7', '12.8', '12.9', '12.10', '12.11', '12.12', '12.13', '13.3', '13.4', '13.5', '13.6', '13.7', '13.8', '13.9', '14.3', '14.4', '14.5', '14.6']`. Default: `14.6`.
+      - RSA 2048
+      - RSA 4096
+      - ECC 384
+  - **`deletion_protection`** *(boolean)*: Explicitly requires this field to be unset before allowing deletion. Default: `True`.
+  - **`source_snapshot`** *(string)*: Cluster or database snapshot ARN. Specifies whether or not to **create** this cluster from a snapshot. Aurora clusters can be restored from cluster snapshots *or* database snapshots. [Learn more](https://docs.massdriver.cloud/runbook/aws/migrating-rds-databases).
+
+    Examples:
+    ```json
+    "arn:aws:rds::ACCOUNT_NUMBER:db/prod"
+    ```
+
+    ```json
+    "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
+    ```
+
+  - **`version`** *(string)*: Must be one of: `['11.9', '11.12', '11.13', '11.14', '11.15', '11.16', '11.17', '11.18', '12.7', '12.8', '12.9', '12.10', '12.11', '12.12', '12.13', '13.3', '13.4', '13.5', '13.6', '13.7', '13.8', '13.9', '14.3', '14.4', '14.5', '14.6']`. Default: `14.6`.
 - **`networking`** *(object)*
   - **`subnet_type`** *(string)*: Deploy to internal subnets (cannot reach the internet) or private subnets (internet egress traffic allowed). Must be one of: `['internal', 'private']`. Default: `internal`.
 - **`observability`** *(object)*
@@ -115,11 +96,43 @@ Form input parameters for configuring a bundle for deployment.
   ```json
   {
       "__name": "Development",
+      "backup": {
+          "retention_period": 0,
+          "skip_final_snapshot": true
+      },
       "database": {
-          "deletion_protection": true
+          "deletion_protection": false,
+          "instance_class": "db.r6g.large",
+          "version": "14.6"
       },
       "networking": {
           "subnet_type": "internal"
+      },
+      "observability": {
+          "enable_cloudwatch_logs_export": false,
+          "enhanced_monitoring_interval": 0
+      }
+  }
+  ```
+
+  ```json
+  {
+      "__name": "Development Serverless",
+      "backup": {
+          "retention_period": 0,
+          "skip_final_snapshot": true
+      },
+      "database": {
+          "deletion_protection": false,
+          "instance_class": "db.serverless",
+          "version": "14.6"
+      },
+      "networking": {
+          "subnet_type": "internal"
+      },
+      "observability": {
+          "enable_cloudwatch_logs_export": false,
+          "enhanced_monitoring_interval": 0
       }
   }
   ```
@@ -127,11 +140,21 @@ Form input parameters for configuring a bundle for deployment.
   ```json
   {
       "__name": "Production",
+      "backup": {
+          "retention_period": 35,
+          "skip_final_snapshot": false
+      },
       "database": {
-          "deletion_protection": true
+          "deletion_protection": true,
+          "instance_class": "db.r6g.2xlarge",
+          "version": "14.6"
       },
       "networking": {
           "subnet_type": "internal"
+      },
+      "observability": {
+          "enable_cloudwatch_logs_export": true,
+          "enhanced_monitoring_interval": 60
       }
   }
   ```

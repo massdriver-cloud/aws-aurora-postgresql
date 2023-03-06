@@ -1,5 +1,6 @@
 locals {
-  # TODO:
+  # TODO: ditch for autoscaling, set count to min of autoscaling for replicas.
+  # split into two resources: primary & replicas
   instances = [
     { 1 = {} },
     { 2 = {} },
@@ -18,16 +19,11 @@ resource "aws_rds_cluster_instance" "instance" {
   apply_immediately     = true
   publicly_accessible   = false
 
-  instance_class = var.database.instance_class
-
   # TODO: field? how does an old value effect this? on redeploy?
   auto_minor_version_upgrade = false
 
-  # TODO:
-  # "rds-ca-rsa2048-g1",
-  # "rds-ca-ecc384-g1",
-  # "rds-ca-rsa4096-g1"
-  # ca_cert_identifier         = var.ca_cert_identifier
+  instance_class     = var.database.instance_class
+  ca_cert_identifier = var.database.ca_cert_identifier
 
   monitoring_role_arn = local.enhanced_monitoring_enabled ? aws_iam_role.rds_enhanced_monitoring[0].arn : null
   monitoring_interval = var.observability.enhanced_monitoring_interval
@@ -36,8 +32,5 @@ resource "aws_rds_cluster_instance" "instance" {
   # performance_insights_enabled          = try(each.value.performance_insights_enabled, var.performance_insights_enabled)
   # performance_insights_kms_key_id       = try(each.value.performance_insights_kms_key_id, var.performance_insights_kms_key_id)
   # performance_insights_retention_period = try(each.value.performance_insights_retention_period, var.performance_insights_retention_period)
-
-  # preferred_maintenance_window = try(each.value.preferred_maintenance_window, var.preferred_maintenance_window)
-  # promotion_tier               = try(each.value.promotion_tier, null)
   # db_parameter_group_name = var.create_db_parameter_group ? aws_db_parameter_group.this[0].id : var.db_parameter_group_name
 }

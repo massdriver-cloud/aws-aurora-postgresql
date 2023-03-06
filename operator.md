@@ -15,29 +15,29 @@ ACU - 2GB / 1 ACU
 * Aurora Clusters can only be provisioned on internal or private subnets.
 * A KMS key is created for encryption and retained after cluster deletion.
 * Tags are copied to snapshots.
+* Daily snapshots
 * Root username and password are automatically generated to reduce exposure.
 * No support for Aurora Global (File an issue)
 * No support for non-Aurora Clusters (See RDS Bundle)
-* No blue/green support as it is not supported for [PostgreSQL yet](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/blue-green-deployments-overview.html)
+* No schema is created by default.
+* No blue/green support as it is not supported for [PostgreSQL](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/blue-green-deployments-overview.html) yes.
 * Instances AZs are auto-assigned by AWS
 * 2 artifacts, one for the writer, one for the readers. If no readers the writer will be present here so you can
   * For applications that dont use load balanced reader, the writer endpoint can be read from
 
 ## Caveats
-* [Custom endpoints](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Overview.Endpoints.html#Aurora.Endpoints.Cluster) aren't supported at this time, please open a ticket if you need support for this.
-* Cluster role associations aren't supported at this time. Please open an issue if you need support.
-* IAM auth isnt supported at this time. Please open an issue if you need support.
+
+* IAM Authentication is *not* implemented, but on our roadmap. Please add a comment/thumbs up on this [issue](https://github.com/massdriver-cloud/aws-aurora-postgresql/issues/4) and we will prioritize.
+* RDS Proxy is *not* implemented, but on our roadmap. Please add a comment/thumbs up on this [issue](https://github.com/massdriver-cloud/aws-aurora-postgresql/issues/3) and we will prioritize.
+* Backup Plans are *not* implemented, but on our roadmap. Please add a comment/thumbs up on this [issue](https://github.com/massdriver-cloud/aws-aurora-postgresql/issues/5) and we will prioritize.
+
+* [Custom endpoints](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Overview.Endpoints.html#Aurora.Endpoints.Cluster) aren't currently on our roadmap. Please open a ticket if you need support for this.
+* Cluster role associations aren't currently on our roadmap. Please open a ticket if you need support for this.
+
+
 
 ## WIP
 
-* [ ] app & svlss scaling
-  * if db.serverless a depenency that shows serverless autoscaling
-* [ ] snapshot restore
-* [ ] metrics / alarms
-* [ ] using instance pools to do an instance type swap, how does major upgrade effect?
-
-* [ ] examples (development, development-serverless, production, production-serverless)
-* [ ] make public
 * [ ] UI & descriptions
 * [ ] test tls w/ the rails app https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html
 * [ ] sync to aws-aurora-mysql
@@ -45,17 +45,9 @@ ACU - 2GB / 1 ACU
 * [ ] https://docs.aws.amazon.com/prescriptive-guidance/latest/migration-postgresql-planning/methods.html
   * https://medium.com/arvind-blogs/migrating-self-managed-postgresql-9-6-to-aws-aurora-postgresql-12-7-or-13-4-ff8f6d42434d
   * https://aws.amazon.com/blogs/database/migrating-legacy-postgresql-databases-to-amazon-rds-or-aurora-postgresql-using-bucardo/
-
-PUNT:
-* [ ] RDS Proxy
+* [ ] semver selector
 * [ ] extract as public module
-* [ ] IAM Auth
-  * https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.IAMDBAuth.IAMPolicy.html
-  * https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.IAMDBAuth.DBAccounts.html
-* [ ] automated backups
-  * [ ] terraform module to run lambda to do hourly backups & expiration of manual snapshots
-* Serverless Wal ? kinesis?
-* serverless pgdash (https://docs.pgdash.io/self-hosted)
+
 * [ ] make: watch src & masssdriver.yaml, republish, foreach example, mass deploy __slug: svlsdev for testing...
 * [ ] json-schemas repo (networking)
   * [ ] rfcs/ # actual schemas for real rfcs

@@ -59,18 +59,9 @@ def transform_instance_class_from(t, from)
 end
 
 ## Get Engine Versions
-maybe_get_data("aws rds describe-db-engine-versions --engine #{$engine} --region #{$region}", $engines_file, $force)
-engines = read_json_file($engines_file)
-
-versions = engines["DBEngineVersions"]
-supported_engine_versions = []
+### This was set by update-engine-version.rb
+supported_engine_versions = conf["params"]["properties"]["database"]["properties"]["version"]["enum"]
 supported_engine_versions_to_instance_class_map = {}
-
-versions.each do |v|
-  next if v["EngineVersion"] == "10.21" # why does this one fail?
-  supported_engine_versions.push v["EngineVersion"]
-end
-
 
 ## Map engine version to instance types
 
@@ -135,7 +126,7 @@ $instance_classes.each_slice(100) do |instance_class_chunk|
         DefaultVCpus: vcpus,
         SizeInGiB: gib,
         Note: note,
-        Label: "#{note} #{vcpus} vCPUs, #{gib} GiB (#{rds_instance_class})"
+        Label: "#{note} #{gib} GiB, #{vcpus} vCPUs (#{rds_instance_class})"
       })
     end
   end
@@ -144,9 +135,12 @@ end
 
 ## Update massdriver.yaml instance types
 
+# make sure path exists
 conf["params"]["properties"]["database"]["dependencies"] ||= {}
 conf["params"]["properties"]["database"]["dependencies"]["version"] ||= {}
-conf["params"]["properties"]["database"]["dependencies"]["version"]["oneOf"] ||= []
+
+# clear previous version dependencies
+conf["params"]["properties"]["database"]["dependencies"]["version"]["oneOf"] = []
 
 supported_engine_versions.each do |version|
   prev = conf["params"]["properties"]["database"]["dependencies"]["version"]["oneOf"]
@@ -163,6 +157,7 @@ supported_engine_versions.each do |version|
       "properties" => {
         "version" => {"const" => version},
         "instance_class" => {
+          "title" => "Instance Class",
           "type" => "string",
           "oneOf" => formatted_instance_classes
         }
@@ -172,7 +167,6 @@ supported_engine_versions.each do |version|
   conf["params"]["properties"]["database"]["dependencies"]["version"]["oneOf"] = updated
 end
 
-puts conf.to_yaml
 
-# ## Update the file
-# File.write($mdyaml, conf.to_yaml)
+## Update the file
+File.write($mdyaml, conf.to_yaml)
