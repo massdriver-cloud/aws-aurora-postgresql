@@ -1,5 +1,4 @@
 resource "aws_appautoscaling_target" "main" {
-
   # TODO: 0-15 val
   max_capacity       = 3 # var.autoscaling_max_capacity
   min_capacity       = 1 # var.autoscaling_min_capacity

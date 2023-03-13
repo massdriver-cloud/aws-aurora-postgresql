@@ -6,17 +6,15 @@ Aurora includes a high-performance storage subsystem. Its PostgreSQL-compatible 
 
 Aurora is part of the managed database service Amazon Relational Database Service (Amazon RDS). Amazon RDS is a web service that makes it easier to set up, operate, and scale a relational database in the cloud.
 
-## Notes
-
-ACU - 2GB / 1 ACU
-
 ## Design Decisions
 
 * Aurora Clusters can only be provisioned on internal or private subnets.
 * A KMS key is created for encryption and retained after cluster deletion.
 * Tags are copied to snapshots.
-* Daily snapshots
+* Daily snapshots.
 * Root username and password are automatically generated to reduce exposure.
+  * Username is generated when not being restored from snapshot, otherwise it will use the snapshots username [note](https://github.com/hashicorp/terraform-provider-aws/pull/9505/files#diff-9d869fc908da636b09ac45e62cd373de7223e04ab7a2279385d6ea31004fcbacR92)
+  * Password is reset on snapshot restore
 * No support for Aurora Global (File an issue)
 * No support for non-Aurora Clusters (See RDS Bundle)
 * No schema is created by default.
@@ -24,36 +22,15 @@ ACU - 2GB / 1 ACU
 * Instances AZs are auto-assigned by AWS
 * 2 artifacts, one for the writer, one for the readers. If no readers the writer will be present here so you can
   * For applications that dont use load balanced reader, the writer endpoint can be read from
-
+* Minimum retention period for backups is 1 day, as they [cannot be disabled in Aurora](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Managing.Backups.html)
 ## Caveats
 
 * IAM Authentication is *not* implemented, but on our roadmap. Please add a comment/thumbs up on this [issue](https://github.com/massdriver-cloud/aws-aurora-postgresql/issues/4) and we will prioritize.
 * RDS Proxy is *not* implemented, but on our roadmap. Please add a comment/thumbs up on this [issue](https://github.com/massdriver-cloud/aws-aurora-postgresql/issues/3) and we will prioritize.
 * Backup Plans are *not* implemented, but on our roadmap. Please add a comment/thumbs up on this [issue](https://github.com/massdriver-cloud/aws-aurora-postgresql/issues/5) and we will prioritize.
-
 * [Custom endpoints](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Overview.Endpoints.html#Aurora.Endpoints.Cluster) aren't currently on our roadmap. Please open a ticket if you need support for this.
 * Cluster role associations aren't currently on our roadmap. Please open a ticket if you need support for this.
-
-
-
-## WIP
-
-* [ ] UI & descriptions
-* [ ] test tls w/ the rails app https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html
-* [ ] sync to aws-aurora-mysql
-* [ ] deprecate aurora serverless
-* [ ] https://docs.aws.amazon.com/prescriptive-guidance/latest/migration-postgresql-planning/methods.html
-  * https://medium.com/arvind-blogs/migrating-self-managed-postgresql-9-6-to-aws-aurora-postgresql-12-7-or-13-4-ff8f6d42434d
-  * https://aws.amazon.com/blogs/database/migrating-legacy-postgresql-databases-to-amazon-rds-or-aurora-postgresql-using-bucardo/
-* [ ] semver selector
-* [ ] extract as public module
-
-* [ ] make: watch src & masssdriver.yaml, republish, foreach example, mass deploy __slug: svlsdev for testing...
-* [ ] json-schemas repo (networking)
-  * [ ] rfcs/ # actual schemas for real rfcs
-  * [ ] k8s/ # real JSON Schema for k8s stuff
-  * [ ] massdriver/properties # our opinions on params … ie alarm input
-  * [ ] massdriver/controls # fancy UI tricks ie conditional alarm input
+* Automatic minor version upgrades are disabled. Please open a ticket if you need support for this.
 
 ## Links
 

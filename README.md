@@ -57,7 +57,7 @@ Form input parameters for configuring a bundle for deployment.
 ## Properties
 
 - **`backup`** *(object)*
-  - **`retention_period`** *(integer)*: The days to retain backups for. Minimum: `0`. Maximum: `35`. Default: `7`.
+  - **`retention_period`** *(integer)*: The days to retain backups for. Minimum: `1`. Maximum: `35`. Default: `7`.
   - **`skip_final_snapshot`** *(boolean)*: Determines whether a final DB snapshot is created before the DB cluster is deleted. If true is specified, no DB snapshot is created. Default: `False`.
 - **`database`** *(object)*
   - **`ca_cert_identifier`** *(string)*: The identifier of the CA certificate for the DB instances. [Learn more](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html). Default: `rds-ca-rsa2048-g1`.
@@ -91,6 +91,15 @@ Form input parameters for configuring a bundle for deployment.
       - 15 seconds
       - 30 seconds
       - 60 seconds
+  - **`performance_insights_retention_period`** *(integer)*: Performance Insights is a database performance tuning and monitoring feature that helps you quickly assess the load on your database, and determine when and where to take action. Performance Insights allows non-experts to detect performance problems with an easy-to-understand dashboard that visualizes database load. Default: `0`.
+    - **One of**
+      - Disabled
+      - 1 Week
+      - 1 Month
+      - 3 Months
+      - 6 Months
+      - 1 Year
+      - 2 Years
 ## Examples
 
   ```json
@@ -110,7 +119,8 @@ Form input parameters for configuring a bundle for deployment.
       },
       "observability": {
           "enable_cloudwatch_logs_export": false,
-          "enhanced_monitoring_interval": 0
+          "enhanced_monitoring_interval": 0,
+          "performance_insights_retention_period": 0
       }
   }
   ```
@@ -132,7 +142,8 @@ Form input parameters for configuring a bundle for deployment.
       },
       "observability": {
           "enable_cloudwatch_logs_export": false,
-          "enhanced_monitoring_interval": 0
+          "enhanced_monitoring_interval": 0,
+          "performance_insights_retention_period": 0
       }
   }
   ```
@@ -154,7 +165,8 @@ Form input parameters for configuring a bundle for deployment.
       },
       "observability": {
           "enable_cloudwatch_logs_export": true,
-          "enhanced_monitoring_interval": 60
+          "enhanced_monitoring_interval": 60,
+          "performance_insights_retention_period": 372
       }
   }
   ```

@@ -1,17 +1,17 @@
 resource "aws_iam_role" "rds_enhanced_monitoring" {
-  count              = local.enhanced_monitoring_enabled ? 1 : 0
+  count              = local.enable_enhanced_monitoring ? 1 : 0
   name               = "${var.md_metadata.name_prefix}-rds-enhanced-monitoring"
   assume_role_policy = data.aws_iam_policy_document.rds_enhanced_monitoring[0].json
 }
 
 resource "aws_iam_role_policy_attachment" "rds_enhanced_monitoring" {
-  count      = local.enhanced_monitoring_enabled ? 1 : 0
+  count      = local.enable_enhanced_monitoring ? 1 : 0
   role       = aws_iam_role.rds_enhanced_monitoring[0].name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
 }
 
 data "aws_iam_policy_document" "rds_enhanced_monitoring" {
-  count = local.enhanced_monitoring_enabled ? 1 : 0
+  count = local.enable_enhanced_monitoring ? 1 : 0
   statement {
     actions = [
       "sts:AssumeRole",

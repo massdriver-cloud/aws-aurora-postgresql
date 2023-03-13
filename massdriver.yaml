@@ -27,6 +27,7 @@ params:
       observability:
         enable_cloudwatch_logs_export: false
         enhanced_monitoring_interval: 0
+        performance_insights_retention_period: 0
       networking:
         subnet_type: internal
       database:
@@ -40,6 +41,7 @@ params:
       observability:
         enable_cloudwatch_logs_export: false
         enhanced_monitoring_interval: 0
+        performance_insights_retention_period: 0
       networking:
         subnet_type: internal
       database:
@@ -53,6 +55,7 @@ params:
       observability:
         enable_cloudwatch_logs_export: true
         enhanced_monitoring_interval: 60
+        performance_insights_retention_period: 372
       networking:
         subnet_type: internal
       database:
@@ -71,7 +74,33 @@ params:
       required:
         - enable_cloudwatch_logs_export
         - enhanced_monitoring_interval
+        - performance_insights_retention_period
       properties:
+        performance_insights_retention_period:
+          title: Performance Insights Retention Period
+          description:
+            Performance Insights is a database performance tuning and monitoring
+            feature that helps you quickly assess the load on your database, and determine
+            when and where to take action. Performance Insights allows non-experts
+            to detect performance problems with an easy-to-understand dashboard that
+            visualizes database load.
+          type: integer
+          default: 0
+          oneOf:
+            - title: Disabled
+              const: 0
+            - title: 1 Week
+              const: 7
+            - title: 1 Month
+              const: 31
+            - title: 3 Months
+              const: 93
+            - title: 6 Months
+              const: 186
+            - title: 1 Year
+              const: 372
+            - title: 2 Years
+              const: 731
         enable_cloudwatch_logs_export:
           title: Enable Cloudwatch Logs Export
           default: true
@@ -118,7 +147,7 @@ params:
           description: The days to retain backups for.
           type: integer
           default: 7
-          minimum: 0
+          minimum: 1
           maximum: 35
     database:
       title: Database
@@ -2243,3 +2272,14 @@ ui:
       - deletion_protection
     serverless_scaling:
       ui:order: [min_capacity, max_capacity]
+  backups:
+    ui:order:
+      - retention_period
+      - skip_final_snapshot
+      - "*"
+  observability:
+    ui:order:
+      - enable_cloudwatch_logs_export
+      - enhanced_monitoring_interval
+      - performance_insights_retention_period
+      - "*"

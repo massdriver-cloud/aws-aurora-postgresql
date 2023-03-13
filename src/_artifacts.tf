@@ -1,14 +1,14 @@
 locals {
   writer_data_authentication = {
-    username = random_pet.root_username.id
-    password = random_password.root_password.result
+    username = aws_rds_cluster.main.master_username
+    password = aws_rds_cluster.main.master_password
     hostname = aws_rds_cluster.main.endpoint
     port     = local.postgresql.port
   }
 
   readers_data_authentication = {
-    username = random_pet.root_username.id
-    password = random_password.root_password.result
+    username = aws_rds_cluster.main.master_username
+    password = aws_rds_cluster.main.master_password
     hostname = aws_rds_cluster.main.reader_endpoint
     port     = local.postgresql.port
   }
