@@ -13,7 +13,7 @@ Amazon Aurora is a fully managed relational database engine that's compatible wi
 
 ---
 
-_Note:_ Engine versions and applicable instance types in `massdriver.yaml` are generated via scripts in `hack/`.
+_Note:_ Engine versions and applicable instance types in `massdriver.yaml` are generated via scripts in `hack/`. Run `make massdriver.yaml` to update.
 
 ## Design
 

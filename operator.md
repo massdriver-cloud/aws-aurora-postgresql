@@ -23,6 +23,7 @@ Aurora is part of the managed database service Amazon Relational Database Servic
 * 2 artifacts, one for the writer, one for the readers. If no readers the writer will be present here so you can
   * For applications that dont use load balanced reader, the writer endpoint can be read from
 * Minimum retention period for backups is 1 day, as they [cannot be disabled in Aurora](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Managing.Backups.html)
+
 ## Caveats
 
 * IAM Authentication is *not* implemented, but on our roadmap. Please add a comment/thumbs up on this [issue](https://github.com/massdriver-cloud/aws-aurora-postgresql/issues/4) and we will prioritize.

@@ -34,12 +34,12 @@ resource "aws_rds_cluster" "main" {
 
   # db_cluster_parameter_group_name - (Optional) A cluster parameter group to associate with the cluster.
   # db_instance_parameter_group_name - (Optional) Instance parameter group to associate with all instances of the DB cluster. The db_instance_parameter_group_name parameter is only valid in combination with the allow_major_version_upgrade parameter.
-  # restore_to_point_in_time - (Optional) Nested attribute for point in time restore. More details below.
 
-  # dynamic "serverlessv2_scaling_configuration" {
-  #  for_each = local.is_serverless ? [ "noop" ] : []
-  #  content {
-  #     min_capacity = lookup(var.database.serverless_scaling, "min_capacity")
-  #     max_capacity = lookup(var.database.serverless_scaling, "max_capacity")
-  #  }
+  dynamic "serverlessv2_scaling_configuration" {
+    for_each = local.is_serverless ? ["noop"] : []
+    content {
+      min_capacity = lookup(var.database.serverless_scaling, "min_capacity")
+      max_capacity = lookup(var.database.serverless_scaling, "max_capacity")
+    }
+  }
 }
