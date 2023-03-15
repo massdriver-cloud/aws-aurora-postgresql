@@ -187,12 +187,6 @@ Form input parameters for configuring a bundle for deployment.
   }
   ```
 
-  ```json
-  {
-      "__name": "Production High Availability TODO"
-  }
-  ```
-
 <!-- PARAMS:END -->
 
 </details>

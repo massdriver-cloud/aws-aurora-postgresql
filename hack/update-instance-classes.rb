@@ -11,6 +11,20 @@ $engines_file = "/tmp/aws-rds-#{$engine}-engines.json"
 # db instance name to ec2 details
 $instance_classes = {}
 
+# tracks group id to list of aws instance classes
+$instances_classes_in_group = {}
+
+# This is an optimization around minimizing the number of oneOfs w/ repeated instance classes
+engine_version_to_instance_class_group = {}
+
+def generate_instance_class_group_jsonschema_id(instance_classes)
+  group_id = Digest::SHA2.hexdigest(instance_classes.sort.join(','))
+
+  $instances_classes_in_group[group_id] = instance_classes
+
+  group_id
+end
+
 $mdyaml = "massdriver.yaml"
 conf = YAML.load(File.read($mdyaml))
 
@@ -97,6 +111,9 @@ supported_engine_versions.each do |engine_version|
       }
     end
   end
+
+  group_id = generate_instance_class_group_jsonschema_id(supported_engine_versions_to_instance_class_map[engine_version])
+  engine_version_to_instance_class_group[engine_version] = group_id
 end
 
 $instance_classes.each_slice(100) do |instance_class_chunk|
@@ -132,6 +149,21 @@ $instance_classes.each_slice(100) do |instance_class_chunk|
   end
 end
 
+## Build params $defs of instance group ids
+conf["params"]["$defs"] = {}
+
+engine_version_to_instance_class_group.values.uniq.each do |group_id|
+  formatted_instance_classes = $instances_classes_in_group[group_id].
+    map {|rds_instance_class| $instance_classes[rds_instance_class]}.
+    sort { |a,b| [a[:DefaultVCpus], a[:SizeInGiB]] <=> [b[:DefaultVCpus] , b[:SizeInGiB]]}.
+    map {|ic| {"title" => ic[:Label], "const" => ic[:RDSInstanceType]}}
+
+  conf["params"]["$defs"]["instance-class-group-#{group_id}"] = {
+    "title" => "Instance Class",
+    "type" => "string",
+    "oneOf" => formatted_instance_classes
+  }
+end
 
 ## Update massdriver.yaml instance types
 
@@ -144,26 +176,21 @@ conf["params"]["properties"]["database"]["dependencies"]["version"]["oneOf"] = [
 
 supported_engine_versions.each do |version|
   prev = conf["params"]["properties"]["database"]["dependencies"]["version"]["oneOf"]
-  instance_classes_with_details = supported_engine_versions_to_instance_class_map[version].map {|v| $instance_classes[v]}
 
-  sorted_instance_classes_with_details = instance_classes_with_details.sort { |a,b|
-    [a[:DefaultVCpus], a[:SizeInGiB]] <=> [b[:DefaultVCpus] , b[:SizeInGiB]]
-  }
-
-  formatted_instance_classes = sorted_instance_classes_with_details.map {|ic| {"title" => ic[:Label], "const" => ic[:RDSInstanceType]}}
+  group_id = engine_version_to_instance_class_group[version]
+  ref_name = "#/$defs/instance-class-group-#{group_id}"
 
   updated = prev.push(
     {
       "properties" => {
         "version" => {"const" => version},
         "instance_class" => {
-          "title" => "Instance Class",
-          "type" => "string",
-          "oneOf" => formatted_instance_classes
+          "$ref" => ref_name
         }
       }
     }
   )
+
   conf["params"]["properties"]["database"]["dependencies"]["version"]["oneOf"] = updated
 end
 
