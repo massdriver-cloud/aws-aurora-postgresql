@@ -32,7 +32,7 @@ Aurora is part of the managed database service Amazon Relational Database Servic
 * Cluster role associations aren't currently on our roadmap. Please open an [issue](https://github.com/massdriver-cloud/aws-aurora-postgresql/issues) if you need support for this.
 * Automatic minor version upgrades are disabled. Please open an [issue](https://github.com/massdriver-cloud/aws-aurora-postgresql/issues) if you need support for this.
 * No support for Aurora Global. Please open an [issue](https://github.com/massdriver-cloud/aws-aurora-postgresql/issues) if you need support for this.
-* No support for non-Aurora Clusters. Please open an [issue](https://github.com/massdriver-cloud/aws-aurora-postgresql/issues) if you need support for this.
+* No support for non-Aurora PostgreSQL. Please open an [issue](https://github.com/massdriver-cloud/aws-aurora-postgresql/issues) if you need support for this.
 
 
 ## Links
