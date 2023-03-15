@@ -56,6 +56,13 @@ Form input parameters for configuring a bundle for deployment.
 <!-- PARAMS:START -->
 ## Properties
 
+- **`availability`** *(object)*
+  - **`autoscaling_mode`** *(string)*: Default: `DISABLED`.
+    - **One of**
+      - Disabled
+      - Database Connections
+      - CPU Utilization
+  - **`min_replicas`** *(integer)*: Replicas and primary are automatically spread across AWS zones. Minimum: `0`. Maximum: `15`. Default: `0`.
 - **`backup`** *(object)*
   - **`retention_period`** *(integer)*: The days to retain backups for. Minimum: `1`. Maximum: `35`. Default: `7`.
   - **`skip_final_snapshot`** *(boolean)*: Determines whether a final DB snapshot is created before the DB cluster is deleted. If true is specified, no DB snapshot is created. Default: `False`.
@@ -105,8 +112,11 @@ Form input parameters for configuring a bundle for deployment.
   ```json
   {
       "__name": "Development",
+      "availability": {
+          "min_replicas": 0
+      },
       "backup": {
-          "retention_period": 0,
+          "retention_period": 1,
           "skip_final_snapshot": true
       },
       "database": {
@@ -128,8 +138,11 @@ Form input parameters for configuring a bundle for deployment.
   ```json
   {
       "__name": "Development Serverless",
+      "availability": {
+          "min_replicas": 0
+      },
       "backup": {
-          "retention_period": 0,
+          "retention_period": 1,
           "skip_final_snapshot": true
       },
       "database": {
@@ -151,6 +164,9 @@ Form input parameters for configuring a bundle for deployment.
   ```json
   {
       "__name": "Production",
+      "availability": {
+          "min_replicas": 2
+      },
       "backup": {
           "retention_period": 35,
           "skip_final_snapshot": false
@@ -168,6 +184,12 @@ Form input parameters for configuring a bundle for deployment.
           "enhanced_monitoring_interval": 60,
           "performance_insights_retention_period": 372
       }
+  }
+  ```
+
+  ```json
+  {
+      "__name": "Production High Availability TODO"
   }
   ```
 

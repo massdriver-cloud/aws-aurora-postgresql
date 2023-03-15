@@ -23,13 +23,15 @@ params:
     - __name: Development
       backup:
         skip_final_snapshot: true
-        retention_period: 0
+        retention_period: 1
       observability:
         enable_cloudwatch_logs_export: false
         enhanced_monitoring_interval: 0
         performance_insights_retention_period: 0
       networking:
         subnet_type: internal
+      availability:
+        min_replicas: 0
       database:
         instance_class: db.r6g.large
         deletion_protection: false
@@ -37,13 +39,15 @@ params:
     - __name: Development Serverless
       backup:
         skip_final_snapshot: true
-        retention_period: 0
+        retention_period: 1
       observability:
         enable_cloudwatch_logs_export: false
         enhanced_monitoring_interval: 0
         performance_insights_retention_period: 0
       networking:
         subnet_type: internal
+      availability:
+        min_replicas: 0
       database:
         instance_class: db.serverless
         deletion_protection: false
@@ -58,16 +62,120 @@ params:
         performance_insights_retention_period: 372
       networking:
         subnet_type: internal
+      availability:
+        min_replicas: 2
       database:
         instance_class: db.r6g.2xlarge
         deletion_protection: true
         version: "14.6"
+    - __name: Production High Availability TODO
   required:
     - networking
     - database
     - backup
     - observability
+    - availability
   properties:
+    availability:
+      title: Availability
+      type: object
+      required:
+        - min_replicas
+        - autoscaling_mode
+      properties:
+        min_replicas:
+          title: Minimum Replicas
+          description: Replicas and primary are automatically spread across AWS zones.
+          type: integer
+          minimum: 0
+          default: 0
+          maximum: 15
+        autoscaling_mode:
+          title: Autoscaling Mode
+          type: string
+          default: DISABLED
+          oneOf:
+            - title: Disabled
+              const: DISABLED
+            - title: Database Connections
+              const: RDSReaderAverageDatabaseConnections
+            - title: CPU Utilization
+              const: RDSReaderAverageCPUUtilization
+      dependencies:
+        autoscaling_mode:
+          oneOf:
+            - properties:
+                autoscaling_mode:
+                  const: DISABLED
+            - required:
+                - max_replicas
+                - scale_in_cooldown
+                - scale_out_cooldown
+                - target_value
+              properties:
+                autoscaling_mode:
+                  const: RDSReaderAverageDatabaseConnections
+                max_replicas:
+                  title: Max Replicas
+                  description: Must be greater than `min_replicas`
+                  type: integer
+                  maximum: 15
+                  minimum: 1
+                scale_in_cooldown:
+                  title: Scale-in Cooldown
+                  description: "The number of **seconds** to block subsequent scale-in requests."
+                  type: integer
+                  minimum: 0
+                  maximum: 3000
+                  default: 300
+                scale_out_cooldown:
+                  title: Scale-out Cooldown
+                  description: "The number of **seconds** to block subsequent scale-out requests."
+                  type: integer
+                  minimum: 0
+                  maximum: 3000
+                  default: 300
+                target_value:
+                  title: Target Database Connections
+                  description: The average number of database connections to target across all readers.
+                  type: integer
+                  minimum: 0
+                  default: 400
+            - required:
+                - max_replicas
+                - scale_in_cooldown
+                - scale_out_cooldown
+                - target_value
+              properties:
+                autoscaling_mode:
+                  const: RDSReaderAverageCPUUtilization
+                max_replicas:
+                  title: Max Replicas
+                  description: Must be greater than `min_replicas`
+                  type: integer
+                  maximum: 15
+                  minimum: 1
+                scale_in_cooldown:
+                  title: Scale-in Cooldown
+                  description: "The number of **seconds** to block subsequent scale-in requests."
+                  type: integer
+                  minimum: 0
+                  maximum: 3000
+                  default: 300
+                scale_out_cooldown:
+                  title: Scale-out Cooldown
+                  description: "The number of **seconds** to block subsequent scale-out requests."
+                  type: integer
+                  minimum: 0
+                  maximum: 3000
+                  default: 300
+                target_value:
+                  title: Target CPU Utilization
+                  description: The average CPU utilization to target across all readers.
+                  type: integer
+                  minimum: 5
+                  maximum: 100
+                  default: 80
     observability:
       title: Observability
       type: object
@@ -159,13 +267,13 @@ params:
         - ca_cert_identifier
       properties:
         source_snapshot:
-          $md.immutable: true
+          "$md.immutable": true
           title: Restore from Snapshot (ARN)
           description:
             Cluster or database snapshot ARN. Specifies whether or not
             to **create** this cluster from a snapshot. Aurora clusters can be restored
             from cluster snapshots *or* database snapshots. [Learn more](https://docs.massdriver.cloud/runbook/aws/migrating-rds-databases)
-          $ref: https://raw.githubusercontent.com/massdriver-cloud/artifact-definitions/main/definitions/types/aws-arn.json
+          "$ref": https://raw.githubusercontent.com/massdriver-cloud/artifact-definitions/main/definitions/types/aws-arn.json
           pattern: "^arn:aws:rds:[a-zA-Z0-9._-]*:[0-9]{12}:(cluster-snapshot|snapshot):[a-zA-Z0-9/._-]+$"
         ca_cert_identifier:
           title: SSL/TLS Encryption
@@ -220,35 +328,6 @@ params:
           type: boolean
           default: true
       dependencies:
-        # instance_class:
-        #   oneOf:
-        #     # TODO: serverless is goofy in UI, failure on oneOf match...
-        #     - properties:
-        #         instance_class:
-        #           const: db.serverless
-        #         serverless_scaling:
-        #           title: Serverless Scaling
-        #           type: object
-        #           required:
-        #             - min_capacity
-        #             - max_capacity
-        #           properties:
-        #             min_capacity:
-        #               title: Minimum Capacity
-        #               type: number
-        #               multipleOf: 0.5
-        #               minimum: 0
-        #               maximum: 128
-        #               description: Each capacity unit is equivalent to a specific compute and memory configuration. Based on the minimum capacity unit setting, Aurora Serverless automatically creates scaling rules for thresholds for CPU utilization, connections, and available memory. Aurora Serverless reduces the resources for the DB cluster when its workload is below these thresholds. Aurora Serverless can reduce capacity down to the minimum capacity unit.
-        #             max_capacity:
-        #               title: Maximum Capacity
-        #               type: number
-        #               multipleOf: 0.5
-        #               description: Each capacity unit is equivalent to a specific compute and memory configuration. Based on the maximum capacity unit setting, Aurora Serverless automatically creates scaling rules for thresholds for CPU utilization, connections, and available memory. Aurora Serverless provides more capacity for the DB cluster from warm pool of resources when its workload is above these thresholds. Aurora Serverless can increase capacity to the maximum capacity unit.
-        #               minimum: 1
-        #               maximum: 128
-        #     - properties: {}
-
         version:
           oneOf:
             - properties:
@@ -2260,18 +2339,31 @@ artifacts:
 ui:
   ui:order:
     - database
+    - availability
     - observability
     - backups
     - "*"
     - networking
+  availability:
+    ui:order:
+      - autoscaling_mode
+      - min_replicas
+      - max_replicas
+      - target_value
+      - scale_in_cooldown
+      - scale_out_cooldown
   database:
+    version:
+      ui:field: versioningDropdown
     ui:order:
       - version
       - instance_class
       - "*"
       - deletion_protection
     serverless_scaling:
-      ui:order: [min_capacity, max_capacity]
+      ui:order:
+        - min_capacity
+        - max_capacity
   backups:
     ui:order:
       - retention_period
