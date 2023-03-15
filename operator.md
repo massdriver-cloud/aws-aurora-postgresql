@@ -15,8 +15,6 @@ Aurora is part of the managed database service Amazon Relational Database Servic
 * Root username and password are automatically generated to reduce exposure.
   * Username is generated when not being restored from snapshot, otherwise it will use the snapshots username [note](https://github.com/hashicorp/terraform-provider-aws/pull/9505/files#diff-9d869fc908da636b09ac45e62cd373de7223e04ab7a2279385d6ea31004fcbacR92)
   * Password is reset on snapshot restore
-* No support for Aurora Global (File an issue)
-* No support for non-Aurora Clusters (See RDS Bundle)
 * No schema is created by default.
 * No blue/green support as it is not supported for [PostgreSQL](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/blue-green-deployments-overview.html) yes.
 * Instances AZs are auto-assigned by AWS
@@ -26,12 +24,16 @@ Aurora is part of the managed database service Amazon Relational Database Servic
 
 ## Caveats
 
+
 * IAM Authentication is *not* implemented, but on our roadmap. Please add a comment/thumbs up on this [issue](https://github.com/massdriver-cloud/aws-aurora-postgresql/issues/4) and we will prioritize.
 * RDS Proxy is *not* implemented, but on our roadmap. Please add a comment/thumbs up on this [issue](https://github.com/massdriver-cloud/aws-aurora-postgresql/issues/3) and we will prioritize.
 * Backup Plans are *not* implemented, but on our roadmap. Please add a comment/thumbs up on this [issue](https://github.com/massdriver-cloud/aws-aurora-postgresql/issues/5) and we will prioritize.
 * [Custom endpoints](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Overview.Endpoints.html#Aurora.Endpoints.Cluster) aren't currently on our roadmap. Please open a ticket if you need support for this.
 * Cluster role associations aren't currently on our roadmap. Please open a ticket if you need support for this.
-* Automatic minor version upgrades are disabled. Please open a ticket if you need support for this.
+* Automatic minor version upgrades are disabled. Please open an [issue](https://github.com/massdriver-cloud/aws-aurora-postgresql/issues) if you need support for this.
+* No support for Aurora Global. Please open an [issue](https://github.com/massdriver-cloud/aws-aurora-postgresql/issues) if you need support for this.
+* No support for non-Aurora Clusters. Please open an [issue](https://github.com/massdriver-cloud/aws-aurora-postgresql/issues) if you need support for this.
+
 
 ## Links
 
