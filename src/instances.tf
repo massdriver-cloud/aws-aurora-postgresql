@@ -2,7 +2,7 @@ resource "aws_rds_cluster_instance" "instance" {
   for_each = { for k, v in local.instance_configs : k => v }
 
   cluster_identifier         = aws_rds_cluster.main.id
-  identifier_prefix          = "${var.md_metadata.name_prefix}-instance-"
+  identifier_prefix          = "${var.md_metadata.name_prefix}-"
   engine                     = aws_rds_cluster.main.engine
   engine_version             = aws_rds_cluster.main.engine_version
   db_subnet_group_name       = aws_db_subnet_group.main.name
