@@ -35,13 +35,13 @@ Security and compliance scanning of our bundles is performed using [Bridgecrew](
 
 | Benchmark                                                                                                                                                                                                                                                       | Description                        |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| [![Infrastructure Security](https://www.bridgecrew.cloud/badges/github/massdriver-cloud/aws-aurora-postgres/general)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=massdriver-cloud%2Faws-aurora-postgres&benchmark=INFRASTRUCTURE+SECURITY) | Infrastructure Security Compliance |
-| [![CIS AWS](https://www.bridgecrew.cloud/badges/github/massdriver-cloud/aws-aurora-postgres/cis_aws)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=massdriver-cloud%2Faws-aurora-postgres&benchmark=CIS+AWS+V1.2) | Center for Internet Security, AWS Compliance |
-| [![PCI-DSS](https://www.bridgecrew.cloud/badges/github/massdriver-cloud/aws-aurora-postgres/pci)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=massdriver-cloud%2Faws-aurora-postgres&benchmark=PCI-DSS+V3.2) | Payment Card Industry Data Security Standards Compliance |
-| [![NIST-800-53](https://www.bridgecrew.cloud/badges/github/massdriver-cloud/aws-aurora-postgres/nist)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=massdriver-cloud%2Faws-aurora-postgres&benchmark=NIST-800-53) | National Institute of Standards and Technology Compliance |
-| [![ISO27001](https://www.bridgecrew.cloud/badges/github/massdriver-cloud/aws-aurora-postgres/iso)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=massdriver-cloud%2Faws-aurora-postgres&benchmark=ISO27001) | Information Security Management System, ISO/IEC 27001 Compliance |
-| [![SOC2](https://www.bridgecrew.cloud/badges/github/massdriver-cloud/aws-aurora-postgres/soc2)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=massdriver-cloud%2Faws-aurora-postgres&benchmark=SOC2)| Service Organization Control 2 Compliance |
-| [![HIPAA](https://www.bridgecrew.cloud/badges/github/massdriver-cloud/aws-aurora-postgres/hipaa)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=massdriver-cloud%2Faws-aurora-postgres&benchmark=HIPAA) | Health Insurance Portability and Accountability Compliance |
+| [![Infrastructure Security](https://www.bridgecrew.cloud/badges/github/massdriver-cloud/aws-aurora-postgresql/general)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=massdriver-cloud%2Faws-aurora-postgresql&benchmark=INFRASTRUCTURE+SECURITY) | Infrastructure Security Compliance |
+| [![CIS AWS](https://www.bridgecrew.cloud/badges/github/massdriver-cloud/aws-aurora-postgresql/cis_aws)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=massdriver-cloud%2Faws-aurora-postgresql&benchmark=CIS+AWS+V1.2) | Center for Internet Security, AWS Compliance |
+| [![PCI-DSS](https://www.bridgecrew.cloud/badges/github/massdriver-cloud/aws-aurora-postgresql/pci)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=massdriver-cloud%2Faws-aurora-postgresql&benchmark=PCI-DSS+V3.2) | Payment Card Industry Data Security Standards Compliance |
+| [![NIST-800-53](https://www.bridgecrew.cloud/badges/github/massdriver-cloud/aws-aurora-postgresql/nist)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=massdriver-cloud%2Faws-aurora-postgresql&benchmark=NIST-800-53) | National Institute of Standards and Technology Compliance |
+| [![ISO27001](https://www.bridgecrew.cloud/badges/github/massdriver-cloud/aws-aurora-postgresql/iso)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=massdriver-cloud%2Faws-aurora-postgresql&benchmark=ISO27001) | Information Security Management System, ISO/IEC 27001 Compliance |
+| [![SOC2](https://www.bridgecrew.cloud/badges/github/massdriver-cloud/aws-aurora-postgresql/soc2)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=massdriver-cloud%2Faws-aurora-postgresql&benchmark=SOC2)| Service Organization Control 2 Compliance |
+| [![HIPAA](https://www.bridgecrew.cloud/badges/github/massdriver-cloud/aws-aurora-postgresql/hipaa)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=massdriver-cloud%2Faws-aurora-postgresql&benchmark=HIPAA) | Health Insurance Portability and Accountability Compliance |
 
 <!-- COMPLIANCE:END -->
 
@@ -708,7 +708,7 @@ Resources created by this bundle that can be connected to other bundles.
 
 ### Bug Reports & Feature Requests
 
-Did we miss something? Please [submit an issue](https://github.com/massdriver-cloud/aws-aurora-postgres/issues) to report any bugs or request additional features.
+Did we miss something? Please [submit an issue](https://github.com/massdriver-cloud/aws-aurora-postgresql/issues) to report any bugs or request additional features.
 
 ### Developing
 
@@ -741,24 +741,24 @@ Please connect with us!
 
 [logo]: https://raw.githubusercontent.com/massdriver-cloud/docs/main/static/img/logo-with-logotype-horizontal-400x110.svg
 
-[docs]: https://docs.massdriver.cloud/?utm_source=github&utm_medium=readme&utm_campaign=aws-aurora-postgres&utm_content=docs
-[website]: https://www.massdriver.cloud/?utm_source=github&utm_medium=readme&utm_campaign=aws-aurora-postgres&utm_content=website
-[github]: https://github.com/massdriver-cloud?utm_source=github&utm_medium=readme&utm_campaign=aws-aurora-postgres&utm_content=github
-[slack]: https://massdriverworkspace.slack.com/?utm_source=github&utm_medium=readme&utm_campaign=aws-aurora-postgres&utm_content=slack
-[linkedin]: https://www.linkedin.com/company/massdriver/?utm_source=github&utm_medium=readme&utm_campaign=aws-aurora-postgres&utm_content=linkedin
+[docs]: https://docs.massdriver.cloud/?utm_source=github&utm_medium=readme&utm_campaign=aws-aurora-postgresql&utm_content=docs
+[website]: https://www.massdriver.cloud/?utm_source=github&utm_medium=readme&utm_campaign=aws-aurora-postgresql&utm_content=website
+[github]: https://github.com/massdriver-cloud?utm_source=github&utm_medium=readme&utm_campaign=aws-aurora-postgresql&utm_content=github
+[slack]: https://massdriverworkspace.slack.com/?utm_source=github&utm_medium=readme&utm_campaign=aws-aurora-postgresql&utm_content=slack
+[linkedin]: https://www.linkedin.com/company/massdriver/?utm_source=github&utm_medium=readme&utm_campaign=aws-aurora-postgresql&utm_content=linkedin
 
-[contributors_shield]: https://img.shields.io/github/contributors/massdriver-cloud/aws-aurora-postgres.svg?style=for-the-badge
-[contributors_url]: https://github.com/massdriver-cloud/aws-aurora-postgres/graphs/contributors
-[forks_shield]: https://img.shields.io/github/forks/massdriver-cloud/aws-aurora-postgres.svg?style=for-the-badge
-[forks_url]: https://github.com/massdriver-cloud/aws-aurora-postgres/network/members
-[stars_shield]: https://img.shields.io/github/stars/massdriver-cloud/aws-aurora-postgres.svg?style=for-the-badge
-[stars_url]: https://github.com/massdriver-cloud/aws-aurora-postgres/stargazers
-[issues_shield]: https://img.shields.io/github/issues/massdriver-cloud/aws-aurora-postgres.svg?style=for-the-badge
-[issues_url]: https://github.com/massdriver-cloud/aws-aurora-postgres/issues
-[release_url]: https://github.com/massdriver-cloud/aws-aurora-postgres/releases/latest
-[release_shield]: https://img.shields.io/github/release/massdriver-cloud/aws-aurora-postgres.svg?style=for-the-badge
-[license_shield]: https://img.shields.io/github/license/massdriver-cloud/aws-aurora-postgres.svg?style=for-the-badge
-[license_url]: https://github.com/massdriver-cloud/aws-aurora-postgres/blob/main/LICENSE
+[contributors_shield]: https://img.shields.io/github/contributors/massdriver-cloud/aws-aurora-postgresql.svg?style=for-the-badge
+[contributors_url]: https://github.com/massdriver-cloud/aws-aurora-postgresql/graphs/contributors
+[forks_shield]: https://img.shields.io/github/forks/massdriver-cloud/aws-aurora-postgresql.svg?style=for-the-badge
+[forks_url]: https://github.com/massdriver-cloud/aws-aurora-postgresql/network/members
+[stars_shield]: https://img.shields.io/github/stars/massdriver-cloud/aws-aurora-postgresql.svg?style=for-the-badge
+[stars_url]: https://github.com/massdriver-cloud/aws-aurora-postgresql/stargazers
+[issues_shield]: https://img.shields.io/github/issues/massdriver-cloud/aws-aurora-postgresql.svg?style=for-the-badge
+[issues_url]: https://github.com/massdriver-cloud/aws-aurora-postgresql/issues
+[release_url]: https://github.com/massdriver-cloud/aws-aurora-postgresql/releases/latest
+[release_shield]: https://img.shields.io/github/release/massdriver-cloud/aws-aurora-postgresql.svg?style=for-the-badge
+[license_shield]: https://img.shields.io/github/license/massdriver-cloud/aws-aurora-postgresql.svg?style=for-the-badge
+[license_url]: https://github.com/massdriver-cloud/aws-aurora-postgresql/blob/main/LICENSE
 
 [email_url]: mailto:support@massdriver.cloud
 [email_shield]: https://img.shields.io/badge/email-Massdriver-black.svg?style=for-the-badge&logo=mail.ru&color=000000
@@ -767,9 +767,9 @@ Please connect with us!
 [linkedin_url]: https://linkedin.com/in/massdriver-cloud
 [linkedin_shield]: https://img.shields.io/badge/follow-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&color=0A66C2
 
-[twitter_url]: https://twitter.com/massdriver?utm_source=github&utm_medium=readme&utm_campaign=aws-aurora-postgres&utm_content=twitter
+[twitter_url]: https://twitter.com/massdriver?utm_source=github&utm_medium=readme&utm_campaign=aws-aurora-postgresql&utm_content=twitter
 [twitter_shield]: https://img.shields.io/badge/follow-Twitter-black.svg?style=for-the-badge&logo=twitter&color=1DA1F2
-[discourse_url]: https://community.massdriver.cloud?utm_source=github&utm_medium=readme&utm_campaign=aws-aurora-postgres&utm_content=discourse
+[discourse_url]: https://community.massdriver.cloud?utm_source=github&utm_medium=readme&utm_campaign=aws-aurora-postgresql&utm_content=discourse
 [discourse_shield]: https://img.shields.io/badge/join-Discourse-black.svg?style=for-the-badge&logo=discourse&color=000000
 [youtube_url]: https://www.youtube.com/channel/UCfj8P7MJcdlem2DJpvymtaQ
 [youtube_shield]: https://img.shields.io/badge/subscribe-Youtube-black.svg?style=for-the-badge&logo=youtube&color=FF0000
