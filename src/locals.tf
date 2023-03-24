@@ -12,7 +12,7 @@ locals {
   }
 
   is_serverless                         = var.database.instance_class == "db.serverless"
-  has_source_snapshot                   = var.database.source_snapshot != null
+  has_source_snapshot                   = lookup(var.database, "source_snapshot", null) != null
   final_snapshot_identifier             = "${var.md_metadata.name_prefix}-final-${element(concat(random_id.snapshot_identifier.*.hex, [""]), 0)}"
   performance_insights_retention_period = lookup(var.observability, "performance_insights_retention_period", 0)
   performance_insights_enabled          = local.performance_insights_retention_period > 0
