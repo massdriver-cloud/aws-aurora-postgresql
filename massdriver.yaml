@@ -1,16 +1,17 @@
 ---
-schema: draft-07
-name: aws-aurora-postgresql
-description: Amazon Aurora is a fully managed relational database engine that's compatible
-  with PostgreSQL. Aurora includes a high-performance storage subsystem. Its PostgreSQL-compatible
-  database engines are customized to take advantage of that fast distributed storage.
-  The underlying storage grows automatically as needed. An Aurora cluster volume can
-  grow to a maximum size of 128 tebibytes (TiB). Aurora also automates and standardizes
-  database clustering and replication, which are typically among the most challenging
-  aspects of database configuration and administration.
-source_url: github.com/massdriver-cloud/aws-aurora-postgresql
-access: private
-type: infrastructure
+metadata:
+  schema: draft-07
+  name: aws-aurora-postgresql
+  description: Amazon Aurora is a fully managed relational database engine that's compatible
+    with PostgreSQL. Aurora includes a high-performance storage subsystem. Its PostgreSQL-compatible
+    database engines are customized to take advantage of that fast distributed storage.
+    The underlying storage grows automatically as needed. An Aurora cluster volume can
+    grow to a maximum size of 128 tebibytes (TiB). Aurora also automates and standardizes
+    database clustering and replication, which are typically among the most challenging
+    aspects of database configuration and administration.
+  source_url: github.com/massdriver-cloud/aws-aurora-postgresql
+  access: private
+  type: infrastructure
 steps:
 - path: kms
   provisioner: terraform
