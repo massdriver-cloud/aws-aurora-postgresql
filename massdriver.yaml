@@ -1,7 +1,7 @@
----
 schema: draft-07
 name: aws-aurora-postgresql
-description: Amazon Aurora is a fully managed relational database engine that's compatible
+description:
+  Amazon Aurora is a fully managed relational database engine that's compatible
   with PostgreSQL. Aurora includes a high-performance storage subsystem. Its PostgreSQL-compatible
   database engines are customized to take advantage of that fast distributed storage.
   The underlying storage grows automatically as needed. An Aurora cluster volume can
@@ -12,74 +12,74 @@ source_url: github.com/massdriver-cloud/aws-aurora-postgresql
 access: private
 type: infrastructure
 steps:
-- path: kms
-  provisioner: terraform
-  skip_on_delete: true
-- path: src
-  provisioner: terraform
+  - path: kms
+    provisioner: terraform
+    skip_on_delete: true
+  - path: src
+    provisioner: terraform
 params:
   examples:
-  - __name: Development
-    backup:
-      skip_final_snapshot: true
-      retention_period: 1
-    observability:
-      enable_cloudwatch_logs_export: false
-      enhanced_monitoring_interval: 0
-      performance_insights_retention_period: 0
-    networking:
-      subnet_type: internal
-    availability:
-      min_replicas: 0
-    database:
-      instance_class: db.r6g.large
-      deletion_protection: false
-      version: '14.6'
-  - __name: Development Serverless
-    backup:
-      skip_final_snapshot: true
-      retention_period: 1
-    observability:
-      enable_cloudwatch_logs_export: false
-      enhanced_monitoring_interval: 0
-      performance_insights_retention_period: 0
-    networking:
-      subnet_type: internal
-    availability:
-      min_replicas: 0
-    database:
-      instance_class: db.serverless
-      deletion_protection: false
-      version: '14.6'
-  - __name: Production
-    backup:
-      skip_final_snapshot: false
-      retention_period: 35
-    observability:
-      enable_cloudwatch_logs_export: true
-      enhanced_monitoring_interval: 60
-      performance_insights_retention_period: 372
-    networking:
-      subnet_type: internal
-    availability:
-      min_replicas: 2
-    database:
-      instance_class: db.r6g.2xlarge
-      deletion_protection: true
-      version: '14.6'
+    - __name: Development
+      backup:
+        skip_final_snapshot: true
+        retention_period: 1
+      observability:
+        enable_cloudwatch_logs_export: false
+        enhanced_monitoring_interval: 0
+        performance_insights_retention_period: 0
+      networking:
+        subnet_type: internal
+      availability:
+        min_replicas: 0
+      database:
+        instance_class: db.r6g.large
+        deletion_protection: false
+        version: "14.6"
+    - __name: Development Serverless
+      backup:
+        skip_final_snapshot: true
+        retention_period: 1
+      observability:
+        enable_cloudwatch_logs_export: false
+        enhanced_monitoring_interval: 0
+        performance_insights_retention_period: 0
+      networking:
+        subnet_type: internal
+      availability:
+        min_replicas: 0
+      database:
+        instance_class: db.serverless
+        deletion_protection: false
+        version: "14.6"
+    - __name: Production
+      backup:
+        skip_final_snapshot: false
+        retention_period: 35
+      observability:
+        enable_cloudwatch_logs_export: true
+        enhanced_monitoring_interval: 60
+        performance_insights_retention_period: 372
+      networking:
+        subnet_type: internal
+      availability:
+        min_replicas: 2
+      database:
+        instance_class: db.r6g.2xlarge
+        deletion_protection: true
+        version: "14.6"
   required:
-  - networking
-  - database
-  - backup
-  - observability
-  - availability
+    - networking
+    - database
+    - backup
+    - observability
+    - availability
   properties:
     availability:
       title: Availability
       type: object
       required:
-      - min_replicas
-      - autoscaling_mode
+        - min_replicas
+        - autoscaling_mode
       properties:
         min_replicas:
           title: Minimum Replicas
@@ -93,103 +93,109 @@ params:
           type: string
           default: DISABLED
           oneOf:
-          - title: Disabled
-            const: DISABLED
-          - title: Database Connections
-            const: RDSReaderAverageDatabaseConnections
-          - title: CPU Utilization
-            const: RDSReaderAverageCPUUtilization
+            - title: Disabled
+              const: DISABLED
+            - title: Database Connections
+              const: RDSReaderAverageDatabaseConnections
+            - title: CPU Utilization
+              const: RDSReaderAverageCPUUtilization
       dependencies:
         autoscaling_mode:
           oneOf:
-          - properties:
-              autoscaling_mode:
-                const: DISABLED
-          - required:
-            - max_replicas
-            - scale_in_cooldown
-            - scale_out_cooldown
-            - target_value
-            properties:
-              autoscaling_mode:
-                const: RDSReaderAverageDatabaseConnections
-              max_replicas:
-                title: Max Replicas
-                description: Must be greater than `min_replicas`
-                type: integer
-                maximum: 15
-                minimum: 1
-              scale_in_cooldown:
-                title: Scale-in Cooldown
-                description: The number of **seconds** to block subsequent scale-in
-                  requests.
-                type: integer
-                minimum: 0
-                maximum: 3000
-                default: 300
-              scale_out_cooldown:
-                title: Scale-out Cooldown
-                description: The number of **seconds** to block subsequent scale-out
-                  requests.
-                type: integer
-                minimum: 0
-                maximum: 3000
-                default: 300
-              target_value:
-                title: Target Database Connections
-                description: The average number of database connections to target
-                  across all readers.
-                type: integer
-                minimum: 0
-                default: 400
-          - required:
-            - max_replicas
-            - scale_in_cooldown
-            - scale_out_cooldown
-            - target_value
-            properties:
-              autoscaling_mode:
-                const: RDSReaderAverageCPUUtilization
-              max_replicas:
-                title: Max Replicas
-                description: Must be greater than `min_replicas`
-                type: integer
-                maximum: 15
-                minimum: 1
-              scale_in_cooldown:
-                title: Scale-in Cooldown
-                description: The number of **seconds** to block subsequent scale-in
-                  requests.
-                type: integer
-                minimum: 0
-                maximum: 3000
-                default: 300
-              scale_out_cooldown:
-                title: Scale-out Cooldown
-                description: The number of **seconds** to block subsequent scale-out
-                  requests.
-                type: integer
-                minimum: 0
-                maximum: 3000
-                default: 300
-              target_value:
-                title: Target CPU Utilization
-                description: The average CPU utilization to target across all readers.
-                type: integer
-                minimum: 5
-                maximum: 100
-                default: 80
+            - properties:
+                autoscaling_mode:
+                  const: DISABLED
+            - required:
+                - max_replicas
+                - scale_in_cooldown
+                - scale_out_cooldown
+                - target_value
+              properties:
+                autoscaling_mode:
+                  const: RDSReaderAverageDatabaseConnections
+                max_replicas:
+                  title: Max Replicas
+                  description: Must be greater than `min_replicas`
+                  type: integer
+                  maximum: 15
+                  minimum: 1
+                scale_in_cooldown:
+                  title: Scale-in Cooldown
+                  description:
+                    The number of **seconds** to block subsequent scale-in
+                    requests.
+                  type: integer
+                  minimum: 0
+                  maximum: 3000
+                  default: 300
+                scale_out_cooldown:
+                  title: Scale-out Cooldown
+                  description:
+                    The number of **seconds** to block subsequent scale-out
+                    requests.
+                  type: integer
+                  minimum: 0
+                  maximum: 3000
+                  default: 300
+                target_value:
+                  title: Target Database Connections
+                  description:
+                    The average number of database connections to target
+                    across all readers.
+                  type: integer
+                  minimum: 0
+                  default: 400
+            - required:
+                - max_replicas
+                - scale_in_cooldown
+                - scale_out_cooldown
+                - target_value
+              properties:
+                autoscaling_mode:
+                  const: RDSReaderAverageCPUUtilization
+                max_replicas:
+                  title: Max Replicas
+                  description: Must be greater than `min_replicas`
+                  type: integer
+                  maximum: 15
+                  minimum: 1
+                scale_in_cooldown:
+                  title: Scale-in Cooldown
+                  description:
+                    The number of **seconds** to block subsequent scale-in
+                    requests.
+                  type: integer
+                  minimum: 0
+                  maximum: 3000
+                  default: 300
+                scale_out_cooldown:
+                  title: Scale-out Cooldown
+                  description:
+                    The number of **seconds** to block subsequent scale-out
+                    requests.
+                  type: integer
+                  minimum: 0
+                  maximum: 3000
+                  default: 300
+                target_value:
+                  title: Target CPU Utilization
+                  description: The average CPU utilization to target across all readers.
+                  type: integer
+                  minimum: 5
+                  maximum: 100
+                  default: 80
     observability:
       title: Observability
       type: object
       required:
-      - enable_cloudwatch_logs_export
-      - enhanced_monitoring_interval
-      - performance_insights_retention_period
+        - enable_cloudwatch_logs_export
+        - enhanced_monitoring_interval
+        - performance_insights_retention_period
       properties:
         performance_insights_retention_period:
           title: Performance Insights Retention Period
-          description: Performance Insights is a database performance tuning and monitoring
+          description:
+            Performance Insights is a database performance tuning and monitoring
             feature that helps you quickly assess the load on your database, and determine
             when and where to take action. Performance Insights allows non-experts
             to detect performance problems with an easy-to-understand dashboard that
@@ -197,52 +203,53 @@ params:
           type: integer
           default: 0
           oneOf:
-          - title: Disabled
-            const: 0
-          - title: 1 Week
-            const: 7
-          - title: 1 Month
-            const: 31
-          - title: 3 Months
-            const: 93
-          - title: 6 Months
-            const: 186
-          - title: 1 Year
-            const: 372
-          - title: 2 Years
-            const: 731
+            - title: Disabled
+              const: 0
+            - title: 1 Week
+              const: 7
+            - title: 1 Month
+              const: 31
+            - title: 3 Months
+              const: 93
+            - title: 6 Months
+              const: 186
+            - title: 1 Year
+              const: 372
+            - title: 2 Years
+              const: 731
         enable_cloudwatch_logs_export:
           title: Enable Cloudwatch Logs Export
           default: true
           type: boolean
         enhanced_monitoring_interval:
           title: Enhanced Monitoring Interval
-          description: Monitor the operating system of DB instances in real time.
+          description:
+            Monitor the operating system of DB instances in real time.
             Enhanced Monitoring is stored in Cloudwatch Logs and may incur additional
             changes. [Learn more](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Monitoring.OS.html)
           type: integer
           default: 0
           oneOf:
-          - title: Disabled
-            const: 0
-          - title: 1 second
-            const: 1
-          - title: 5 seconds
-            const: 5
-          - title: 10 seconds
-            const: 10
-          - title: 15 seconds
-            const: 15
-          - title: 30 seconds
-            const: 30
-          - title: 60 seconds
-            const: 60
+            - title: Disabled
+              const: 0
+            - title: 1 second
+              const: 1
+            - title: 5 seconds
+              const: 5
+            - title: 10 seconds
+              const: 10
+            - title: 15 seconds
+              const: 15
+            - title: 30 seconds
+              const: 30
+            - title: 60 seconds
+              const: 60
     backup:
       title: Backups, Snapshots, & Recovery
       type: object
       required:
-      - skip_final_snapshot
-      - retention_period
+        - skip_final_snapshot
+        - retention_period
       properties:
         skip_final_snapshot:
           "$ref": https://raw.githubusercontent.com/massdriver-cloud/json-schemas/main/aws/rds/skip_final_snapshot.json
@@ -252,63 +259,65 @@ params:
       title: Database
       type: object
       required:
-      - version
-      - deletion_protection
-      - instance_class
-      - ca_cert_identifier
+        - version
+        - deletion_protection
+        - instance_class
+        - ca_cert_identifier
       properties:
         source_snapshot:
           "$md.immutable": true
           title: Restore from Snapshot (ARN)
-          description: Cluster or database snapshot ARN. Specifies whether or not
+          description:
+            Cluster or database snapshot ARN. Specifies whether or not
             to **create** this cluster from a snapshot. Aurora clusters can be restored
             from cluster snapshots *or* database snapshots. [Learn more](https://docs.massdriver.cloud/runbook/aws/migrating-rds-databases)
           "$ref": https://raw.githubusercontent.com/massdriver-cloud/artifact-definitions/main/definitions/types/aws-arn.json
           pattern: "^arn:aws:rds:[a-zA-Z0-9._-]*:[0-9]{12}:(cluster-snapshot|snapshot):[a-zA-Z0-9/._-]+$"
         ca_cert_identifier:
           title: SSL/TLS Encryption
-          description: The identifier of the CA certificate for the DB instances.
+          description:
+            The identifier of the CA certificate for the DB instances.
             [Learn more](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html).
           type: string
           default: rds-ca-rsa2048-g1
           oneOf:
-          - title: RSA 2048
-            const: rds-ca-rsa2048-g1
-          - title: RSA 4096
-            const: rds-ca-rsa4096-g1
-          - title: ECC 384
-            const: rds-ca-ecc384-g1
+            - title: RSA 2048
+              const: rds-ca-rsa2048-g1
+            - title: RSA 4096
+              const: rds-ca-rsa4096-g1
+            - title: ECC 384
+              const: rds-ca-ecc384-g1
         version:
           title: PostgreSQL Version
           type: string
           enum:
-          - '11.9'
-          - '11.12'
-          - '11.13'
-          - '11.14'
-          - '11.15'
-          - '11.16'
-          - '11.17'
-          - '11.18'
-          - '12.7'
-          - '12.8'
-          - '12.9'
-          - '12.10'
-          - '12.11'
-          - '12.12'
-          - '12.13'
-          - '13.3'
-          - '13.4'
-          - '13.5'
-          - '13.6'
-          - '13.7'
-          - '13.8'
-          - '13.9'
-          - '14.3'
-          - '14.4'
-          - '14.5'
-          - '14.6'
-          default: '14.6'
+            - "11.9"
+            - "11.12"
+            - "11.13"
+            - "11.14"
+            - "11.15"
+            - "11.16"
+            - "11.17"
+            - "11.18"
+            - "12.7"
+            - "12.8"
+            - "12.9"
+            - "12.10"
+            - "12.11"
+            - "12.12"
+            - "12.13"
+            - "13.3"
+            - "13.4"
+            - "13.5"
+            - "13.6"
+            - "13.7"
+            - "13.8"
+            - "13.9"
+            - "14.3"
+            - "14.4"
+            - "14.5"
+            - "14.6"
+          default: "14.6"
         deletion_protection:
           "$ref": https://raw.githubusercontent.com/massdriver-cloud/json-schemas/main/aws/rds/deletion_protection.json
       if:
@@ -317,143 +326,143 @@ params:
             const: db.serverless
       then:
         required:
-        - serverless_scaling
+          - serverless_scaling
         properties:
           serverless_scaling:
             "$ref": https://raw.githubusercontent.com/massdriver-cloud/json-schemas/main/aws/rds/aurora/serverlessv2_scaling_configuration.json
       dependencies:
         version:
           oneOf:
-          - properties:
-              version:
-                const: '11.9'
-              instance_class:
-                "$ref": "#/$defs/instance-class-group-628e4e013f9b75c97b18b39beb76cbaec9c4191b5ee56c5943a1b65daf3774d1"
-          - properties:
-              version:
-                const: '11.12'
-              instance_class:
-                "$ref": "#/$defs/instance-class-group-628e4e013f9b75c97b18b39beb76cbaec9c4191b5ee56c5943a1b65daf3774d1"
-          - properties:
-              version:
-                const: '11.13'
-              instance_class:
-                "$ref": "#/$defs/instance-class-group-628e4e013f9b75c97b18b39beb76cbaec9c4191b5ee56c5943a1b65daf3774d1"
-          - properties:
-              version:
-                const: '11.14'
-              instance_class:
-                "$ref": "#/$defs/instance-class-group-628e4e013f9b75c97b18b39beb76cbaec9c4191b5ee56c5943a1b65daf3774d1"
-          - properties:
-              version:
-                const: '11.15'
-              instance_class:
-                "$ref": "#/$defs/instance-class-group-628e4e013f9b75c97b18b39beb76cbaec9c4191b5ee56c5943a1b65daf3774d1"
-          - properties:
-              version:
-                const: '11.16'
-              instance_class:
-                "$ref": "#/$defs/instance-class-group-628e4e013f9b75c97b18b39beb76cbaec9c4191b5ee56c5943a1b65daf3774d1"
-          - properties:
-              version:
-                const: '11.17'
-              instance_class:
-                "$ref": "#/$defs/instance-class-group-628e4e013f9b75c97b18b39beb76cbaec9c4191b5ee56c5943a1b65daf3774d1"
-          - properties:
-              version:
-                const: '11.18'
-              instance_class:
-                "$ref": "#/$defs/instance-class-group-628e4e013f9b75c97b18b39beb76cbaec9c4191b5ee56c5943a1b65daf3774d1"
-          - properties:
-              version:
-                const: '12.7'
-              instance_class:
-                "$ref": "#/$defs/instance-class-group-628e4e013f9b75c97b18b39beb76cbaec9c4191b5ee56c5943a1b65daf3774d1"
-          - properties:
-              version:
-                const: '12.8'
-              instance_class:
-                "$ref": "#/$defs/instance-class-group-628e4e013f9b75c97b18b39beb76cbaec9c4191b5ee56c5943a1b65daf3774d1"
-          - properties:
-              version:
-                const: '12.9'
-              instance_class:
-                "$ref": "#/$defs/instance-class-group-6822d93b7056af17af447f9a2e0a773dc50836afb527a305bf758bc9634a66a0"
-          - properties:
-              version:
-                const: '12.10'
-              instance_class:
-                "$ref": "#/$defs/instance-class-group-6822d93b7056af17af447f9a2e0a773dc50836afb527a305bf758bc9634a66a0"
-          - properties:
-              version:
-                const: '12.11'
-              instance_class:
-                "$ref": "#/$defs/instance-class-group-6822d93b7056af17af447f9a2e0a773dc50836afb527a305bf758bc9634a66a0"
-          - properties:
-              version:
-                const: '12.12'
-              instance_class:
-                "$ref": "#/$defs/instance-class-group-6822d93b7056af17af447f9a2e0a773dc50836afb527a305bf758bc9634a66a0"
-          - properties:
-              version:
-                const: '12.13'
-              instance_class:
-                "$ref": "#/$defs/instance-class-group-6822d93b7056af17af447f9a2e0a773dc50836afb527a305bf758bc9634a66a0"
-          - properties:
-              version:
-                const: '13.3'
-              instance_class:
-                "$ref": "#/$defs/instance-class-group-84a9809f10ec0bea078e09f4add20101df7666ebfb6f0eca7068d89fba87c891"
-          - properties:
-              version:
-                const: '13.4'
-              instance_class:
-                "$ref": "#/$defs/instance-class-group-84a9809f10ec0bea078e09f4add20101df7666ebfb6f0eca7068d89fba87c891"
-          - properties:
-              version:
-                const: '13.5'
-              instance_class:
-                "$ref": "#/$defs/instance-class-group-5b13ebf1cf98ce2c9a657aa4c7b9ce38c64abb39022c1f9f536d10383db6e152"
-          - properties:
-              version:
-                const: '13.6'
-              instance_class:
-                "$ref": "#/$defs/instance-class-group-5fa726788b1e46735cb3d7058b43ced9e971bd1d96c76a18875b5f664a1bbf28"
-          - properties:
-              version:
-                const: '13.7'
-              instance_class:
-                "$ref": "#/$defs/instance-class-group-5fa726788b1e46735cb3d7058b43ced9e971bd1d96c76a18875b5f664a1bbf28"
-          - properties:
-              version:
-                const: '13.8'
-              instance_class:
-                "$ref": "#/$defs/instance-class-group-5fa726788b1e46735cb3d7058b43ced9e971bd1d96c76a18875b5f664a1bbf28"
-          - properties:
-              version:
-                const: '13.9'
-              instance_class:
-                "$ref": "#/$defs/instance-class-group-5fa726788b1e46735cb3d7058b43ced9e971bd1d96c76a18875b5f664a1bbf28"
-          - properties:
-              version:
-                const: '14.3'
-              instance_class:
-                "$ref": "#/$defs/instance-class-group-5fa726788b1e46735cb3d7058b43ced9e971bd1d96c76a18875b5f664a1bbf28"
-          - properties:
-              version:
-                const: '14.4'
-              instance_class:
-                "$ref": "#/$defs/instance-class-group-5fa726788b1e46735cb3d7058b43ced9e971bd1d96c76a18875b5f664a1bbf28"
-          - properties:
-              version:
-                const: '14.5'
-              instance_class:
-                "$ref": "#/$defs/instance-class-group-5fa726788b1e46735cb3d7058b43ced9e971bd1d96c76a18875b5f664a1bbf28"
-          - properties:
-              version:
-                const: '14.6'
-              instance_class:
-                "$ref": "#/$defs/instance-class-group-5fa726788b1e46735cb3d7058b43ced9e971bd1d96c76a18875b5f664a1bbf28"
+            - properties:
+                version:
+                  const: "11.9"
+                instance_class:
+                  "$ref": "#/$defs/instance-class-group-628e4e013f9b75c97b18b39beb76cbaec9c4191b5ee56c5943a1b65daf3774d1"
+            - properties:
+                version:
+                  const: "11.12"
+                instance_class:
+                  "$ref": "#/$defs/instance-class-group-628e4e013f9b75c97b18b39beb76cbaec9c4191b5ee56c5943a1b65daf3774d1"
+            - properties:
+                version:
+                  const: "11.13"
+                instance_class:
+                  "$ref": "#/$defs/instance-class-group-628e4e013f9b75c97b18b39beb76cbaec9c4191b5ee56c5943a1b65daf3774d1"
+            - properties:
+                version:
+                  const: "11.14"
+                instance_class:
+                  "$ref": "#/$defs/instance-class-group-628e4e013f9b75c97b18b39beb76cbaec9c4191b5ee56c5943a1b65daf3774d1"
+            - properties:
+                version:
+                  const: "11.15"
+                instance_class:
+                  "$ref": "#/$defs/instance-class-group-628e4e013f9b75c97b18b39beb76cbaec9c4191b5ee56c5943a1b65daf3774d1"
+            - properties:
+                version:
+                  const: "11.16"
+                instance_class:
+                  "$ref": "#/$defs/instance-class-group-628e4e013f9b75c97b18b39beb76cbaec9c4191b5ee56c5943a1b65daf3774d1"
+            - properties:
+                version:
+                  const: "11.17"
+                instance_class:
+                  "$ref": "#/$defs/instance-class-group-628e4e013f9b75c97b18b39beb76cbaec9c4191b5ee56c5943a1b65daf3774d1"
+            - properties:
+                version:
+                  const: "11.18"
+                instance_class:
+                  "$ref": "#/$defs/instance-class-group-628e4e013f9b75c97b18b39beb76cbaec9c4191b5ee56c5943a1b65daf3774d1"
+            - properties:
+                version:
+                  const: "12.7"
+                instance_class:
+                  "$ref": "#/$defs/instance-class-group-628e4e013f9b75c97b18b39beb76cbaec9c4191b5ee56c5943a1b65daf3774d1"
+            - properties:
+                version:
+                  const: "12.8"
+                instance_class:
+                  "$ref": "#/$defs/instance-class-group-628e4e013f9b75c97b18b39beb76cbaec9c4191b5ee56c5943a1b65daf3774d1"
+            - properties:
+                version:
+                  const: "12.9"
+                instance_class:
+                  "$ref": "#/$defs/instance-class-group-6822d93b7056af17af447f9a2e0a773dc50836afb527a305bf758bc9634a66a0"
+            - properties:
+                version:
+                  const: "12.10"
+                instance_class:
+                  "$ref": "#/$defs/instance-class-group-6822d93b7056af17af447f9a2e0a773dc50836afb527a305bf758bc9634a66a0"
+            - properties:
+                version:
+                  const: "12.11"
+                instance_class:
+                  "$ref": "#/$defs/instance-class-group-6822d93b7056af17af447f9a2e0a773dc50836afb527a305bf758bc9634a66a0"
+            - properties:
+                version:
+                  const: "12.12"
+                instance_class:
+                  "$ref": "#/$defs/instance-class-group-6822d93b7056af17af447f9a2e0a773dc50836afb527a305bf758bc9634a66a0"
+            - properties:
+                version:
+                  const: "12.13"
+                instance_class:
+                  "$ref": "#/$defs/instance-class-group-6822d93b7056af17af447f9a2e0a773dc50836afb527a305bf758bc9634a66a0"
+            - properties:
+                version:
+                  const: "13.3"
+                instance_class:
+                  "$ref": "#/$defs/instance-class-group-84a9809f10ec0bea078e09f4add20101df7666ebfb6f0eca7068d89fba87c891"
+            - properties:
+                version:
+                  const: "13.4"
+                instance_class:
+                  "$ref": "#/$defs/instance-class-group-84a9809f10ec0bea078e09f4add20101df7666ebfb6f0eca7068d89fba87c891"
+            - properties:
+                version:
+                  const: "13.5"
+                instance_class:
+                  "$ref": "#/$defs/instance-class-group-5b13ebf1cf98ce2c9a657aa4c7b9ce38c64abb39022c1f9f536d10383db6e152"
+            - properties:
+                version:
+                  const: "13.6"
+                instance_class:
+                  "$ref": "#/$defs/instance-class-group-5fa726788b1e46735cb3d7058b43ced9e971bd1d96c76a18875b5f664a1bbf28"
+            - properties:
+                version:
+                  const: "13.7"
+                instance_class:
+                  "$ref": "#/$defs/instance-class-group-5fa726788b1e46735cb3d7058b43ced9e971bd1d96c76a18875b5f664a1bbf28"
+            - properties:
+                version:
+                  const: "13.8"
+                instance_class:
+                  "$ref": "#/$defs/instance-class-group-5fa726788b1e46735cb3d7058b43ced9e971bd1d96c76a18875b5f664a1bbf28"
+            - properties:
+                version:
+                  const: "13.9"
+                instance_class:
+                  "$ref": "#/$defs/instance-class-group-5fa726788b1e46735cb3d7058b43ced9e971bd1d96c76a18875b5f664a1bbf28"
+            - properties:
+                version:
+                  const: "14.3"
+                instance_class:
+                  "$ref": "#/$defs/instance-class-group-5fa726788b1e46735cb3d7058b43ced9e971bd1d96c76a18875b5f664a1bbf28"
+            - properties:
+                version:
+                  const: "14.4"
+                instance_class:
+                  "$ref": "#/$defs/instance-class-group-5fa726788b1e46735cb3d7058b43ced9e971bd1d96c76a18875b5f664a1bbf28"
+            - properties:
+                version:
+                  const: "14.5"
+                instance_class:
+                  "$ref": "#/$defs/instance-class-group-5fa726788b1e46735cb3d7058b43ced9e971bd1d96c76a18875b5f664a1bbf28"
+            - properties:
+                version:
+                  const: "14.6"
+                instance_class:
+                  "$ref": "#/$defs/instance-class-group-5fa726788b1e46735cb3d7058b43ced9e971bd1d96c76a18875b5f664a1bbf28"
     networking:
       title: Networking
       type: object
@@ -461,370 +470,370 @@ params:
         subnet_type:
           "$ref": https://raw.githubusercontent.com/massdriver-cloud/json-schemas/main/massdriver/properties/networking/aws/subnet_type.json
   "$defs":
-    instance-class-group-628e4e013f9b75c97b18b39beb76cbaec9c4191b5ee56c5943a1b65daf3774d1:
-      title: Instance Class
+    ? instance-class-group-628e4e013f9b75c97b18b39beb76cbaec9c4191b5ee56c5943a1b65daf3774d1
+    : title: Instance Class
       type: string
       oneOf:
-      - title: Burstable 4 GiB, 2 vCPUs (db.t4g.medium)
-        const: db.t4g.medium
-      - title: Burstable 4 GiB, 2 vCPUs (db.t3.medium)
-        const: db.t3.medium
-      - title: Burstable 8 GiB, 2 vCPUs (db.t4g.large)
-        const: db.t4g.large
-      - title: Burstable 8 GiB, 2 vCPUs (db.t3.large)
-        const: db.t3.large
-      - title: Memory Optimized 15 GiB, 2 vCPUs (db.r4.large)
-        const: db.r4.large
-      - title: Memory Optimized 16 GiB, 2 vCPUs (db.r5.large)
-        const: db.r5.large
-      - title: Memory Optimized 16 GiB, 2 vCPUs (db.r6g.large)
-        const: db.r6g.large
-      - title: Memory Optimized 32 GiB, 2 vCPUs (db.x2g.large)
-        const: db.x2g.large
-      - title: Memory Optimized 30 GiB, 4 vCPUs (db.r4.xlarge)
-        const: db.r4.xlarge
-      - title: Memory Optimized 32 GiB, 4 vCPUs (db.r6g.xlarge)
-        const: db.r6g.xlarge
-      - title: Memory Optimized 32 GiB, 4 vCPUs (db.r5.xlarge)
-        const: db.r5.xlarge
-      - title: Memory Optimized 64 GiB, 4 vCPUs (db.x2g.xlarge)
-        const: db.x2g.xlarge
-      - title: Memory Optimized 61 GiB, 8 vCPUs (db.r4.2xlarge)
-        const: db.r4.2xlarge
-      - title: Memory Optimized 64 GiB, 8 vCPUs (db.r6g.2xlarge)
-        const: db.r6g.2xlarge
-      - title: Memory Optimized 64 GiB, 8 vCPUs (db.r5.2xlarge)
-        const: db.r5.2xlarge
-      - title: Memory Optimized 128 GiB, 8 vCPUs (db.x2g.2xlarge)
-        const: db.x2g.2xlarge
-      - title: Memory Optimized 122 GiB, 16 vCPUs (db.r4.4xlarge)
-        const: db.r4.4xlarge
-      - title: Memory Optimized 128 GiB, 16 vCPUs (db.r5.4xlarge)
-        const: db.r5.4xlarge
-      - title: Memory Optimized 128 GiB, 16 vCPUs (db.r6g.4xlarge)
-        const: db.r6g.4xlarge
-      - title: Memory Optimized 256 GiB, 16 vCPUs (db.x2g.4xlarge)
-        const: db.x2g.4xlarge
-      - title: Memory Optimized 244 GiB, 32 vCPUs (db.r4.8xlarge)
-        const: db.r4.8xlarge
-      - title: Memory Optimized 256 GiB, 32 vCPUs (db.r5.8xlarge)
-        const: db.r5.8xlarge
-      - title: Memory Optimized 256 GiB, 32 vCPUs (db.r6g.8xlarge)
-        const: db.r6g.8xlarge
-      - title: Memory Optimized 512 GiB, 32 vCPUs (db.x2g.8xlarge)
-        const: db.x2g.8xlarge
-      - title: Memory Optimized 384 GiB, 48 vCPUs (db.r6g.12xlarge)
-        const: db.r6g.12xlarge
-      - title: Memory Optimized 384 GiB, 48 vCPUs (db.r5.12xlarge)
-        const: db.r5.12xlarge
-      - title: Memory Optimized 768 GiB, 48 vCPUs (db.x2g.12xlarge)
-        const: db.x2g.12xlarge
-      - title: Memory Optimized 488 GiB, 64 vCPUs (db.r4.16xlarge)
-        const: db.r4.16xlarge
-      - title: Memory Optimized 512 GiB, 64 vCPUs (db.r5.16xlarge)
-        const: db.r5.16xlarge
-      - title: Memory Optimized 512 GiB, 64 vCPUs (db.r6g.16xlarge)
-        const: db.r6g.16xlarge
-      - title: Memory Optimized 1024 GiB, 64 vCPUs (db.x2g.16xlarge)
-        const: db.x2g.16xlarge
-      - title: Memory Optimized 768 GiB, 96 vCPUs (db.r5.24xlarge)
-        const: db.r5.24xlarge
-    instance-class-group-6822d93b7056af17af447f9a2e0a773dc50836afb527a305bf758bc9634a66a0:
-      title: Instance Class
+        - title: Burstable 4 GiB, 2 vCPUs (db.t4g.medium)
+          const: db.t4g.medium
+        - title: Burstable 4 GiB, 2 vCPUs (db.t3.medium)
+          const: db.t3.medium
+        - title: Burstable 8 GiB, 2 vCPUs (db.t4g.large)
+          const: db.t4g.large
+        - title: Burstable 8 GiB, 2 vCPUs (db.t3.large)
+          const: db.t3.large
+        - title: Memory Optimized 15 GiB, 2 vCPUs (db.r4.large)
+          const: db.r4.large
+        - title: Memory Optimized 16 GiB, 2 vCPUs (db.r5.large)
+          const: db.r5.large
+        - title: Memory Optimized 16 GiB, 2 vCPUs (db.r6g.large)
+          const: db.r6g.large
+        - title: Memory Optimized 32 GiB, 2 vCPUs (db.x2g.large)
+          const: db.x2g.large
+        - title: Memory Optimized 30 GiB, 4 vCPUs (db.r4.xlarge)
+          const: db.r4.xlarge
+        - title: Memory Optimized 32 GiB, 4 vCPUs (db.r6g.xlarge)
+          const: db.r6g.xlarge
+        - title: Memory Optimized 32 GiB, 4 vCPUs (db.r5.xlarge)
+          const: db.r5.xlarge
+        - title: Memory Optimized 64 GiB, 4 vCPUs (db.x2g.xlarge)
+          const: db.x2g.xlarge
+        - title: Memory Optimized 61 GiB, 8 vCPUs (db.r4.2xlarge)
+          const: db.r4.2xlarge
+        - title: Memory Optimized 64 GiB, 8 vCPUs (db.r6g.2xlarge)
+          const: db.r6g.2xlarge
+        - title: Memory Optimized 64 GiB, 8 vCPUs (db.r5.2xlarge)
+          const: db.r5.2xlarge
+        - title: Memory Optimized 128 GiB, 8 vCPUs (db.x2g.2xlarge)
+          const: db.x2g.2xlarge
+        - title: Memory Optimized 122 GiB, 16 vCPUs (db.r4.4xlarge)
+          const: db.r4.4xlarge
+        - title: Memory Optimized 128 GiB, 16 vCPUs (db.r5.4xlarge)
+          const: db.r5.4xlarge
+        - title: Memory Optimized 128 GiB, 16 vCPUs (db.r6g.4xlarge)
+          const: db.r6g.4xlarge
+        - title: Memory Optimized 256 GiB, 16 vCPUs (db.x2g.4xlarge)
+          const: db.x2g.4xlarge
+        - title: Memory Optimized 244 GiB, 32 vCPUs (db.r4.8xlarge)
+          const: db.r4.8xlarge
+        - title: Memory Optimized 256 GiB, 32 vCPUs (db.r5.8xlarge)
+          const: db.r5.8xlarge
+        - title: Memory Optimized 256 GiB, 32 vCPUs (db.r6g.8xlarge)
+          const: db.r6g.8xlarge
+        - title: Memory Optimized 512 GiB, 32 vCPUs (db.x2g.8xlarge)
+          const: db.x2g.8xlarge
+        - title: Memory Optimized 384 GiB, 48 vCPUs (db.r6g.12xlarge)
+          const: db.r6g.12xlarge
+        - title: Memory Optimized 384 GiB, 48 vCPUs (db.r5.12xlarge)
+          const: db.r5.12xlarge
+        - title: Memory Optimized 768 GiB, 48 vCPUs (db.x2g.12xlarge)
+          const: db.x2g.12xlarge
+        - title: Memory Optimized 488 GiB, 64 vCPUs (db.r4.16xlarge)
+          const: db.r4.16xlarge
+        - title: Memory Optimized 512 GiB, 64 vCPUs (db.r5.16xlarge)
+          const: db.r5.16xlarge
+        - title: Memory Optimized 512 GiB, 64 vCPUs (db.r6g.16xlarge)
+          const: db.r6g.16xlarge
+        - title: Memory Optimized 1024 GiB, 64 vCPUs (db.x2g.16xlarge)
+          const: db.x2g.16xlarge
+        - title: Memory Optimized 768 GiB, 96 vCPUs (db.r5.24xlarge)
+          const: db.r5.24xlarge
+    ? instance-class-group-6822d93b7056af17af447f9a2e0a773dc50836afb527a305bf758bc9634a66a0
+    : title: Instance Class
       type: string
       oneOf:
-      - title: Burstable 4 GiB, 2 vCPUs (db.t4g.medium)
-        const: db.t4g.medium
-      - title: Burstable 4 GiB, 2 vCPUs (db.t3.medium)
-        const: db.t3.medium
-      - title: Burstable 8 GiB, 2 vCPUs (db.t3.large)
-        const: db.t3.large
-      - title: Burstable 8 GiB, 2 vCPUs (db.t4g.large)
-        const: db.t4g.large
-      - title: Memory Optimized 15 GiB, 2 vCPUs (db.r4.large)
-        const: db.r4.large
-      - title: Memory Optimized 16 GiB, 2 vCPUs (db.r6g.large)
-        const: db.r6g.large
-      - title: Memory Optimized 16 GiB, 2 vCPUs (db.r5.large)
-        const: db.r5.large
-      - title: Memory Optimized 16 GiB, 2 vCPUs (db.r6i.large)
-        const: db.r6i.large
-      - title: Memory Optimized 32 GiB, 2 vCPUs (db.x2g.large)
-        const: db.x2g.large
-      - title: Memory Optimized 30 GiB, 4 vCPUs (db.r4.xlarge)
-        const: db.r4.xlarge
-      - title: Memory Optimized 32 GiB, 4 vCPUs (db.r6i.xlarge)
-        const: db.r6i.xlarge
-      - title: Memory Optimized 32 GiB, 4 vCPUs (db.r6g.xlarge)
-        const: db.r6g.xlarge
-      - title: Memory Optimized 32 GiB, 4 vCPUs (db.r5.xlarge)
-        const: db.r5.xlarge
-      - title: Memory Optimized 64 GiB, 4 vCPUs (db.x2g.xlarge)
-        const: db.x2g.xlarge
-      - title: Memory Optimized 61 GiB, 8 vCPUs (db.r4.2xlarge)
-        const: db.r4.2xlarge
-      - title: Memory Optimized 64 GiB, 8 vCPUs (db.r6i.2xlarge)
-        const: db.r6i.2xlarge
-      - title: Memory Optimized 64 GiB, 8 vCPUs (db.r5.2xlarge)
-        const: db.r5.2xlarge
-      - title: Memory Optimized 64 GiB, 8 vCPUs (db.r6g.2xlarge)
-        const: db.r6g.2xlarge
-      - title: Memory Optimized 128 GiB, 8 vCPUs (db.x2g.2xlarge)
-        const: db.x2g.2xlarge
-      - title: Memory Optimized 122 GiB, 16 vCPUs (db.r4.4xlarge)
-        const: db.r4.4xlarge
-      - title: Memory Optimized 128 GiB, 16 vCPUs (db.r5.4xlarge)
-        const: db.r5.4xlarge
-      - title: Memory Optimized 128 GiB, 16 vCPUs (db.r6g.4xlarge)
-        const: db.r6g.4xlarge
-      - title: Memory Optimized 128 GiB, 16 vCPUs (db.r6i.4xlarge)
-        const: db.r6i.4xlarge
-      - title: Memory Optimized 256 GiB, 16 vCPUs (db.x2g.4xlarge)
-        const: db.x2g.4xlarge
-      - title: Memory Optimized 244 GiB, 32 vCPUs (db.r4.8xlarge)
-        const: db.r4.8xlarge
-      - title: Memory Optimized 256 GiB, 32 vCPUs (db.r6g.8xlarge)
-        const: db.r6g.8xlarge
-      - title: Memory Optimized 256 GiB, 32 vCPUs (db.r5.8xlarge)
-        const: db.r5.8xlarge
-      - title: Memory Optimized 256 GiB, 32 vCPUs (db.r6i.8xlarge)
-        const: db.r6i.8xlarge
-      - title: Memory Optimized 512 GiB, 32 vCPUs (db.x2g.8xlarge)
-        const: db.x2g.8xlarge
-      - title: Memory Optimized 384 GiB, 48 vCPUs (db.r6i.12xlarge)
-        const: db.r6i.12xlarge
-      - title: Memory Optimized 384 GiB, 48 vCPUs (db.r6g.12xlarge)
-        const: db.r6g.12xlarge
-      - title: Memory Optimized 384 GiB, 48 vCPUs (db.r5.12xlarge)
-        const: db.r5.12xlarge
-      - title: Memory Optimized 768 GiB, 48 vCPUs (db.x2g.12xlarge)
-        const: db.x2g.12xlarge
-      - title: Memory Optimized 488 GiB, 64 vCPUs (db.r4.16xlarge)
-        const: db.r4.16xlarge
-      - title: Memory Optimized 512 GiB, 64 vCPUs (db.r6i.16xlarge)
-        const: db.r6i.16xlarge
-      - title: Memory Optimized 512 GiB, 64 vCPUs (db.r6g.16xlarge)
-        const: db.r6g.16xlarge
-      - title: Memory Optimized 512 GiB, 64 vCPUs (db.r5.16xlarge)
-        const: db.r5.16xlarge
-      - title: Memory Optimized 1024 GiB, 64 vCPUs (db.x2g.16xlarge)
-        const: db.x2g.16xlarge
-      - title: Memory Optimized 768 GiB, 96 vCPUs (db.r5.24xlarge)
-        const: db.r5.24xlarge
-      - title: Memory Optimized 768 GiB, 96 vCPUs (db.r6i.24xlarge)
-        const: db.r6i.24xlarge
-      - title: Memory Optimized 1024 GiB, 128 vCPUs (db.r6i.32xlarge)
-        const: db.r6i.32xlarge
-    instance-class-group-84a9809f10ec0bea078e09f4add20101df7666ebfb6f0eca7068d89fba87c891:
-      title: Instance Class
+        - title: Burstable 4 GiB, 2 vCPUs (db.t4g.medium)
+          const: db.t4g.medium
+        - title: Burstable 4 GiB, 2 vCPUs (db.t3.medium)
+          const: db.t3.medium
+        - title: Burstable 8 GiB, 2 vCPUs (db.t3.large)
+          const: db.t3.large
+        - title: Burstable 8 GiB, 2 vCPUs (db.t4g.large)
+          const: db.t4g.large
+        - title: Memory Optimized 15 GiB, 2 vCPUs (db.r4.large)
+          const: db.r4.large
+        - title: Memory Optimized 16 GiB, 2 vCPUs (db.r6g.large)
+          const: db.r6g.large
+        - title: Memory Optimized 16 GiB, 2 vCPUs (db.r5.large)
+          const: db.r5.large
+        - title: Memory Optimized 16 GiB, 2 vCPUs (db.r6i.large)
+          const: db.r6i.large
+        - title: Memory Optimized 32 GiB, 2 vCPUs (db.x2g.large)
+          const: db.x2g.large
+        - title: Memory Optimized 30 GiB, 4 vCPUs (db.r4.xlarge)
+          const: db.r4.xlarge
+        - title: Memory Optimized 32 GiB, 4 vCPUs (db.r6i.xlarge)
+          const: db.r6i.xlarge
+        - title: Memory Optimized 32 GiB, 4 vCPUs (db.r6g.xlarge)
+          const: db.r6g.xlarge
+        - title: Memory Optimized 32 GiB, 4 vCPUs (db.r5.xlarge)
+          const: db.r5.xlarge
+        - title: Memory Optimized 64 GiB, 4 vCPUs (db.x2g.xlarge)
+          const: db.x2g.xlarge
+        - title: Memory Optimized 61 GiB, 8 vCPUs (db.r4.2xlarge)
+          const: db.r4.2xlarge
+        - title: Memory Optimized 64 GiB, 8 vCPUs (db.r6i.2xlarge)
+          const: db.r6i.2xlarge
+        - title: Memory Optimized 64 GiB, 8 vCPUs (db.r5.2xlarge)
+          const: db.r5.2xlarge
+        - title: Memory Optimized 64 GiB, 8 vCPUs (db.r6g.2xlarge)
+          const: db.r6g.2xlarge
+        - title: Memory Optimized 128 GiB, 8 vCPUs (db.x2g.2xlarge)
+          const: db.x2g.2xlarge
+        - title: Memory Optimized 122 GiB, 16 vCPUs (db.r4.4xlarge)
+          const: db.r4.4xlarge
+        - title: Memory Optimized 128 GiB, 16 vCPUs (db.r5.4xlarge)
+          const: db.r5.4xlarge
+        - title: Memory Optimized 128 GiB, 16 vCPUs (db.r6g.4xlarge)
+          const: db.r6g.4xlarge
+        - title: Memory Optimized 128 GiB, 16 vCPUs (db.r6i.4xlarge)
+          const: db.r6i.4xlarge
+        - title: Memory Optimized 256 GiB, 16 vCPUs (db.x2g.4xlarge)
+          const: db.x2g.4xlarge
+        - title: Memory Optimized 244 GiB, 32 vCPUs (db.r4.8xlarge)
+          const: db.r4.8xlarge
+        - title: Memory Optimized 256 GiB, 32 vCPUs (db.r6g.8xlarge)
+          const: db.r6g.8xlarge
+        - title: Memory Optimized 256 GiB, 32 vCPUs (db.r5.8xlarge)
+          const: db.r5.8xlarge
+        - title: Memory Optimized 256 GiB, 32 vCPUs (db.r6i.8xlarge)
+          const: db.r6i.8xlarge
+        - title: Memory Optimized 512 GiB, 32 vCPUs (db.x2g.8xlarge)
+          const: db.x2g.8xlarge
+        - title: Memory Optimized 384 GiB, 48 vCPUs (db.r6i.12xlarge)
+          const: db.r6i.12xlarge
+        - title: Memory Optimized 384 GiB, 48 vCPUs (db.r6g.12xlarge)
+          const: db.r6g.12xlarge
+        - title: Memory Optimized 384 GiB, 48 vCPUs (db.r5.12xlarge)
+          const: db.r5.12xlarge
+        - title: Memory Optimized 768 GiB, 48 vCPUs (db.x2g.12xlarge)
+          const: db.x2g.12xlarge
+        - title: Memory Optimized 488 GiB, 64 vCPUs (db.r4.16xlarge)
+          const: db.r4.16xlarge
+        - title: Memory Optimized 512 GiB, 64 vCPUs (db.r6i.16xlarge)
+          const: db.r6i.16xlarge
+        - title: Memory Optimized 512 GiB, 64 vCPUs (db.r6g.16xlarge)
+          const: db.r6g.16xlarge
+        - title: Memory Optimized 512 GiB, 64 vCPUs (db.r5.16xlarge)
+          const: db.r5.16xlarge
+        - title: Memory Optimized 1024 GiB, 64 vCPUs (db.x2g.16xlarge)
+          const: db.x2g.16xlarge
+        - title: Memory Optimized 768 GiB, 96 vCPUs (db.r5.24xlarge)
+          const: db.r5.24xlarge
+        - title: Memory Optimized 768 GiB, 96 vCPUs (db.r6i.24xlarge)
+          const: db.r6i.24xlarge
+        - title: Memory Optimized 1024 GiB, 128 vCPUs (db.r6i.32xlarge)
+          const: db.r6i.32xlarge
+    ? instance-class-group-84a9809f10ec0bea078e09f4add20101df7666ebfb6f0eca7068d89fba87c891
+    : title: Instance Class
       type: string
       oneOf:
-      - title: Burstable 4 GiB, 2 vCPUs (db.t3.medium)
-        const: db.t3.medium
-      - title: Burstable 4 GiB, 2 vCPUs (db.t4g.medium)
-        const: db.t4g.medium
-      - title: Burstable 8 GiB, 2 vCPUs (db.t3.large)
-        const: db.t3.large
-      - title: Burstable 8 GiB, 2 vCPUs (db.t4g.large)
-        const: db.t4g.large
-      - title: Memory Optimized 16 GiB, 2 vCPUs (db.r6g.large)
-        const: db.r6g.large
-      - title: Memory Optimized 16 GiB, 2 vCPUs (db.r5.large)
-        const: db.r5.large
-      - title: Memory Optimized 32 GiB, 2 vCPUs (db.x2g.large)
-        const: db.x2g.large
-      - title: Memory Optimized 32 GiB, 4 vCPUs (db.r6g.xlarge)
-        const: db.r6g.xlarge
-      - title: Memory Optimized 32 GiB, 4 vCPUs (db.r5.xlarge)
-        const: db.r5.xlarge
-      - title: Memory Optimized 64 GiB, 4 vCPUs (db.x2g.xlarge)
-        const: db.x2g.xlarge
-      - title: Memory Optimized 64 GiB, 8 vCPUs (db.r5.2xlarge)
-        const: db.r5.2xlarge
-      - title: Memory Optimized 64 GiB, 8 vCPUs (db.r6g.2xlarge)
-        const: db.r6g.2xlarge
-      - title: Memory Optimized 128 GiB, 8 vCPUs (db.x2g.2xlarge)
-        const: db.x2g.2xlarge
-      - title: Memory Optimized 128 GiB, 16 vCPUs (db.r5.4xlarge)
-        const: db.r5.4xlarge
-      - title: Memory Optimized 128 GiB, 16 vCPUs (db.r6g.4xlarge)
-        const: db.r6g.4xlarge
-      - title: Memory Optimized 256 GiB, 16 vCPUs (db.x2g.4xlarge)
-        const: db.x2g.4xlarge
-      - title: Memory Optimized 256 GiB, 32 vCPUs (db.r5.8xlarge)
-        const: db.r5.8xlarge
-      - title: Memory Optimized 256 GiB, 32 vCPUs (db.r6g.8xlarge)
-        const: db.r6g.8xlarge
-      - title: Memory Optimized 512 GiB, 32 vCPUs (db.x2g.8xlarge)
-        const: db.x2g.8xlarge
-      - title: Memory Optimized 384 GiB, 48 vCPUs (db.r5.12xlarge)
-        const: db.r5.12xlarge
-      - title: Memory Optimized 384 GiB, 48 vCPUs (db.r6g.12xlarge)
-        const: db.r6g.12xlarge
-      - title: Memory Optimized 768 GiB, 48 vCPUs (db.x2g.12xlarge)
-        const: db.x2g.12xlarge
-      - title: Memory Optimized 512 GiB, 64 vCPUs (db.r5.16xlarge)
-        const: db.r5.16xlarge
-      - title: Memory Optimized 512 GiB, 64 vCPUs (db.r6g.16xlarge)
-        const: db.r6g.16xlarge
-      - title: Memory Optimized 1024 GiB, 64 vCPUs (db.x2g.16xlarge)
-        const: db.x2g.16xlarge
-      - title: Memory Optimized 768 GiB, 96 vCPUs (db.r5.24xlarge)
-        const: db.r5.24xlarge
-    instance-class-group-5b13ebf1cf98ce2c9a657aa4c7b9ce38c64abb39022c1f9f536d10383db6e152:
-      title: Instance Class
+        - title: Burstable 4 GiB, 2 vCPUs (db.t3.medium)
+          const: db.t3.medium
+        - title: Burstable 4 GiB, 2 vCPUs (db.t4g.medium)
+          const: db.t4g.medium
+        - title: Burstable 8 GiB, 2 vCPUs (db.t3.large)
+          const: db.t3.large
+        - title: Burstable 8 GiB, 2 vCPUs (db.t4g.large)
+          const: db.t4g.large
+        - title: Memory Optimized 16 GiB, 2 vCPUs (db.r6g.large)
+          const: db.r6g.large
+        - title: Memory Optimized 16 GiB, 2 vCPUs (db.r5.large)
+          const: db.r5.large
+        - title: Memory Optimized 32 GiB, 2 vCPUs (db.x2g.large)
+          const: db.x2g.large
+        - title: Memory Optimized 32 GiB, 4 vCPUs (db.r6g.xlarge)
+          const: db.r6g.xlarge
+        - title: Memory Optimized 32 GiB, 4 vCPUs (db.r5.xlarge)
+          const: db.r5.xlarge
+        - title: Memory Optimized 64 GiB, 4 vCPUs (db.x2g.xlarge)
+          const: db.x2g.xlarge
+        - title: Memory Optimized 64 GiB, 8 vCPUs (db.r5.2xlarge)
+          const: db.r5.2xlarge
+        - title: Memory Optimized 64 GiB, 8 vCPUs (db.r6g.2xlarge)
+          const: db.r6g.2xlarge
+        - title: Memory Optimized 128 GiB, 8 vCPUs (db.x2g.2xlarge)
+          const: db.x2g.2xlarge
+        - title: Memory Optimized 128 GiB, 16 vCPUs (db.r5.4xlarge)
+          const: db.r5.4xlarge
+        - title: Memory Optimized 128 GiB, 16 vCPUs (db.r6g.4xlarge)
+          const: db.r6g.4xlarge
+        - title: Memory Optimized 256 GiB, 16 vCPUs (db.x2g.4xlarge)
+          const: db.x2g.4xlarge
+        - title: Memory Optimized 256 GiB, 32 vCPUs (db.r5.8xlarge)
+          const: db.r5.8xlarge
+        - title: Memory Optimized 256 GiB, 32 vCPUs (db.r6g.8xlarge)
+          const: db.r6g.8xlarge
+        - title: Memory Optimized 512 GiB, 32 vCPUs (db.x2g.8xlarge)
+          const: db.x2g.8xlarge
+        - title: Memory Optimized 384 GiB, 48 vCPUs (db.r5.12xlarge)
+          const: db.r5.12xlarge
+        - title: Memory Optimized 384 GiB, 48 vCPUs (db.r6g.12xlarge)
+          const: db.r6g.12xlarge
+        - title: Memory Optimized 768 GiB, 48 vCPUs (db.x2g.12xlarge)
+          const: db.x2g.12xlarge
+        - title: Memory Optimized 512 GiB, 64 vCPUs (db.r5.16xlarge)
+          const: db.r5.16xlarge
+        - title: Memory Optimized 512 GiB, 64 vCPUs (db.r6g.16xlarge)
+          const: db.r6g.16xlarge
+        - title: Memory Optimized 1024 GiB, 64 vCPUs (db.x2g.16xlarge)
+          const: db.x2g.16xlarge
+        - title: Memory Optimized 768 GiB, 96 vCPUs (db.r5.24xlarge)
+          const: db.r5.24xlarge
+    ? instance-class-group-5b13ebf1cf98ce2c9a657aa4c7b9ce38c64abb39022c1f9f536d10383db6e152
+    : title: Instance Class
       type: string
       oneOf:
-      - title: Burstable 4 GiB, 2 vCPUs (db.t3.medium)
-        const: db.t3.medium
-      - title: Burstable 4 GiB, 2 vCPUs (db.t4g.medium)
-        const: db.t4g.medium
-      - title: Burstable 8 GiB, 2 vCPUs (db.t4g.large)
-        const: db.t4g.large
-      - title: Burstable 8 GiB, 2 vCPUs (db.t3.large)
-        const: db.t3.large
-      - title: Memory Optimized 16 GiB, 2 vCPUs (db.r6i.large)
-        const: db.r6i.large
-      - title: Memory Optimized 16 GiB, 2 vCPUs (db.r6g.large)
-        const: db.r6g.large
-      - title: Memory Optimized 16 GiB, 2 vCPUs (db.r5.large)
-        const: db.r5.large
-      - title: Memory Optimized 32 GiB, 2 vCPUs (db.x2g.large)
-        const: db.x2g.large
-      - title: Memory Optimized 32 GiB, 4 vCPUs (db.r6i.xlarge)
-        const: db.r6i.xlarge
-      - title: Memory Optimized 32 GiB, 4 vCPUs (db.r5.xlarge)
-        const: db.r5.xlarge
-      - title: Memory Optimized 32 GiB, 4 vCPUs (db.r6g.xlarge)
-        const: db.r6g.xlarge
-      - title: Memory Optimized 64 GiB, 4 vCPUs (db.x2g.xlarge)
-        const: db.x2g.xlarge
-      - title: Memory Optimized 64 GiB, 8 vCPUs (db.r6g.2xlarge)
-        const: db.r6g.2xlarge
-      - title: Memory Optimized 64 GiB, 8 vCPUs (db.r6i.2xlarge)
-        const: db.r6i.2xlarge
-      - title: Memory Optimized 64 GiB, 8 vCPUs (db.r5.2xlarge)
-        const: db.r5.2xlarge
-      - title: Memory Optimized 128 GiB, 8 vCPUs (db.x2g.2xlarge)
-        const: db.x2g.2xlarge
-      - title: Memory Optimized 128 GiB, 16 vCPUs (db.r6i.4xlarge)
-        const: db.r6i.4xlarge
-      - title: Memory Optimized 128 GiB, 16 vCPUs (db.r6g.4xlarge)
-        const: db.r6g.4xlarge
-      - title: Memory Optimized 128 GiB, 16 vCPUs (db.r5.4xlarge)
-        const: db.r5.4xlarge
-      - title: Memory Optimized 256 GiB, 16 vCPUs (db.x2g.4xlarge)
-        const: db.x2g.4xlarge
-      - title: Memory Optimized 256 GiB, 32 vCPUs (db.r5.8xlarge)
-        const: db.r5.8xlarge
-      - title: Memory Optimized 256 GiB, 32 vCPUs (db.r6i.8xlarge)
-        const: db.r6i.8xlarge
-      - title: Memory Optimized 256 GiB, 32 vCPUs (db.r6g.8xlarge)
-        const: db.r6g.8xlarge
-      - title: Memory Optimized 512 GiB, 32 vCPUs (db.x2g.8xlarge)
-        const: db.x2g.8xlarge
-      - title: Memory Optimized 384 GiB, 48 vCPUs (db.r5.12xlarge)
-        const: db.r5.12xlarge
-      - title: Memory Optimized 384 GiB, 48 vCPUs (db.r6g.12xlarge)
-        const: db.r6g.12xlarge
-      - title: Memory Optimized 384 GiB, 48 vCPUs (db.r6i.12xlarge)
-        const: db.r6i.12xlarge
-      - title: Memory Optimized 768 GiB, 48 vCPUs (db.x2g.12xlarge)
-        const: db.x2g.12xlarge
-      - title: Memory Optimized 512 GiB, 64 vCPUs (db.r5.16xlarge)
-        const: db.r5.16xlarge
-      - title: Memory Optimized 512 GiB, 64 vCPUs (db.r6i.16xlarge)
-        const: db.r6i.16xlarge
-      - title: Memory Optimized 512 GiB, 64 vCPUs (db.r6g.16xlarge)
-        const: db.r6g.16xlarge
-      - title: Memory Optimized 1024 GiB, 64 vCPUs (db.x2g.16xlarge)
-        const: db.x2g.16xlarge
-      - title: Memory Optimized 768 GiB, 96 vCPUs (db.r5.24xlarge)
-        const: db.r5.24xlarge
-      - title: Memory Optimized 768 GiB, 96 vCPUs (db.r6i.24xlarge)
-        const: db.r6i.24xlarge
-      - title: Memory Optimized 1024 GiB, 128 vCPUs (db.r6i.32xlarge)
-        const: db.r6i.32xlarge
-    instance-class-group-5fa726788b1e46735cb3d7058b43ced9e971bd1d96c76a18875b5f664a1bbf28:
-      title: Instance Class
+        - title: Burstable 4 GiB, 2 vCPUs (db.t3.medium)
+          const: db.t3.medium
+        - title: Burstable 4 GiB, 2 vCPUs (db.t4g.medium)
+          const: db.t4g.medium
+        - title: Burstable 8 GiB, 2 vCPUs (db.t4g.large)
+          const: db.t4g.large
+        - title: Burstable 8 GiB, 2 vCPUs (db.t3.large)
+          const: db.t3.large
+        - title: Memory Optimized 16 GiB, 2 vCPUs (db.r6i.large)
+          const: db.r6i.large
+        - title: Memory Optimized 16 GiB, 2 vCPUs (db.r6g.large)
+          const: db.r6g.large
+        - title: Memory Optimized 16 GiB, 2 vCPUs (db.r5.large)
+          const: db.r5.large
+        - title: Memory Optimized 32 GiB, 2 vCPUs (db.x2g.large)
+          const: db.x2g.large
+        - title: Memory Optimized 32 GiB, 4 vCPUs (db.r6i.xlarge)
+          const: db.r6i.xlarge
+        - title: Memory Optimized 32 GiB, 4 vCPUs (db.r5.xlarge)
+          const: db.r5.xlarge
+        - title: Memory Optimized 32 GiB, 4 vCPUs (db.r6g.xlarge)
+          const: db.r6g.xlarge
+        - title: Memory Optimized 64 GiB, 4 vCPUs (db.x2g.xlarge)
+          const: db.x2g.xlarge
+        - title: Memory Optimized 64 GiB, 8 vCPUs (db.r6g.2xlarge)
+          const: db.r6g.2xlarge
+        - title: Memory Optimized 64 GiB, 8 vCPUs (db.r6i.2xlarge)
+          const: db.r6i.2xlarge
+        - title: Memory Optimized 64 GiB, 8 vCPUs (db.r5.2xlarge)
+          const: db.r5.2xlarge
+        - title: Memory Optimized 128 GiB, 8 vCPUs (db.x2g.2xlarge)
+          const: db.x2g.2xlarge
+        - title: Memory Optimized 128 GiB, 16 vCPUs (db.r6i.4xlarge)
+          const: db.r6i.4xlarge
+        - title: Memory Optimized 128 GiB, 16 vCPUs (db.r6g.4xlarge)
+          const: db.r6g.4xlarge
+        - title: Memory Optimized 128 GiB, 16 vCPUs (db.r5.4xlarge)
+          const: db.r5.4xlarge
+        - title: Memory Optimized 256 GiB, 16 vCPUs (db.x2g.4xlarge)
+          const: db.x2g.4xlarge
+        - title: Memory Optimized 256 GiB, 32 vCPUs (db.r5.8xlarge)
+          const: db.r5.8xlarge
+        - title: Memory Optimized 256 GiB, 32 vCPUs (db.r6i.8xlarge)
+          const: db.r6i.8xlarge
+        - title: Memory Optimized 256 GiB, 32 vCPUs (db.r6g.8xlarge)
+          const: db.r6g.8xlarge
+        - title: Memory Optimized 512 GiB, 32 vCPUs (db.x2g.8xlarge)
+          const: db.x2g.8xlarge
+        - title: Memory Optimized 384 GiB, 48 vCPUs (db.r5.12xlarge)
+          const: db.r5.12xlarge
+        - title: Memory Optimized 384 GiB, 48 vCPUs (db.r6g.12xlarge)
+          const: db.r6g.12xlarge
+        - title: Memory Optimized 384 GiB, 48 vCPUs (db.r6i.12xlarge)
+          const: db.r6i.12xlarge
+        - title: Memory Optimized 768 GiB, 48 vCPUs (db.x2g.12xlarge)
+          const: db.x2g.12xlarge
+        - title: Memory Optimized 512 GiB, 64 vCPUs (db.r5.16xlarge)
+          const: db.r5.16xlarge
+        - title: Memory Optimized 512 GiB, 64 vCPUs (db.r6i.16xlarge)
+          const: db.r6i.16xlarge
+        - title: Memory Optimized 512 GiB, 64 vCPUs (db.r6g.16xlarge)
+          const: db.r6g.16xlarge
+        - title: Memory Optimized 1024 GiB, 64 vCPUs (db.x2g.16xlarge)
+          const: db.x2g.16xlarge
+        - title: Memory Optimized 768 GiB, 96 vCPUs (db.r5.24xlarge)
+          const: db.r5.24xlarge
+        - title: Memory Optimized 768 GiB, 96 vCPUs (db.r6i.24xlarge)
+          const: db.r6i.24xlarge
+        - title: Memory Optimized 1024 GiB, 128 vCPUs (db.r6i.32xlarge)
+          const: db.r6i.32xlarge
+    ? instance-class-group-5fa726788b1e46735cb3d7058b43ced9e971bd1d96c76a18875b5f664a1bbf28
+    : title: Instance Class
       type: string
       oneOf:
-      - title: Serverless 2GiB / 1 ACU (db.serverless)
-        const: db.serverless
-      - title: Burstable 4 GiB, 2 vCPUs (db.t3.medium)
-        const: db.t3.medium
-      - title: Burstable 4 GiB, 2 vCPUs (db.t4g.medium)
-        const: db.t4g.medium
-      - title: Burstable 8 GiB, 2 vCPUs (db.t4g.large)
-        const: db.t4g.large
-      - title: Burstable 8 GiB, 2 vCPUs (db.t3.large)
-        const: db.t3.large
-      - title: Memory Optimized 16 GiB, 2 vCPUs (db.r6g.large)
-        const: db.r6g.large
-      - title: Memory Optimized 16 GiB, 2 vCPUs (db.r6i.large)
-        const: db.r6i.large
-      - title: Memory Optimized 16 GiB, 2 vCPUs (db.r5.large)
-        const: db.r5.large
-      - title: Memory Optimized 32 GiB, 2 vCPUs (db.x2g.large)
-        const: db.x2g.large
-      - title: Memory Optimized 32 GiB, 4 vCPUs (db.r5.xlarge)
-        const: db.r5.xlarge
-      - title: Memory Optimized 32 GiB, 4 vCPUs (db.r6g.xlarge)
-        const: db.r6g.xlarge
-      - title: Memory Optimized 32 GiB, 4 vCPUs (db.r6i.xlarge)
-        const: db.r6i.xlarge
-      - title: Memory Optimized 64 GiB, 4 vCPUs (db.x2g.xlarge)
-        const: db.x2g.xlarge
-      - title: Memory Optimized 64 GiB, 8 vCPUs (db.r6i.2xlarge)
-        const: db.r6i.2xlarge
-      - title: Memory Optimized 64 GiB, 8 vCPUs (db.r5.2xlarge)
-        const: db.r5.2xlarge
-      - title: Memory Optimized 64 GiB, 8 vCPUs (db.r6g.2xlarge)
-        const: db.r6g.2xlarge
-      - title: Memory Optimized 128 GiB, 8 vCPUs (db.x2g.2xlarge)
-        const: db.x2g.2xlarge
-      - title: Memory Optimized 128 GiB, 16 vCPUs (db.r6g.4xlarge)
-        const: db.r6g.4xlarge
-      - title: Memory Optimized 128 GiB, 16 vCPUs (db.r6i.4xlarge)
-        const: db.r6i.4xlarge
-      - title: Memory Optimized 128 GiB, 16 vCPUs (db.r5.4xlarge)
-        const: db.r5.4xlarge
-      - title: Memory Optimized 256 GiB, 16 vCPUs (db.x2g.4xlarge)
-        const: db.x2g.4xlarge
-      - title: Memory Optimized 256 GiB, 32 vCPUs (db.r6g.8xlarge)
-        const: db.r6g.8xlarge
-      - title: Memory Optimized 256 GiB, 32 vCPUs (db.r6i.8xlarge)
-        const: db.r6i.8xlarge
-      - title: Memory Optimized 256 GiB, 32 vCPUs (db.r5.8xlarge)
-        const: db.r5.8xlarge
-      - title: Memory Optimized 512 GiB, 32 vCPUs (db.x2g.8xlarge)
-        const: db.x2g.8xlarge
-      - title: Memory Optimized 384 GiB, 48 vCPUs (db.r6i.12xlarge)
-        const: db.r6i.12xlarge
-      - title: Memory Optimized 384 GiB, 48 vCPUs (db.r5.12xlarge)
-        const: db.r5.12xlarge
-      - title: Memory Optimized 384 GiB, 48 vCPUs (db.r6g.12xlarge)
-        const: db.r6g.12xlarge
-      - title: Memory Optimized 768 GiB, 48 vCPUs (db.x2g.12xlarge)
-        const: db.x2g.12xlarge
-      - title: Memory Optimized 512 GiB, 64 vCPUs (db.r5.16xlarge)
-        const: db.r5.16xlarge
-      - title: Memory Optimized 512 GiB, 64 vCPUs (db.r6g.16xlarge)
-        const: db.r6g.16xlarge
-      - title: Memory Optimized 512 GiB, 64 vCPUs (db.r6i.16xlarge)
-        const: db.r6i.16xlarge
-      - title: Memory Optimized 1024 GiB, 64 vCPUs (db.x2g.16xlarge)
-        const: db.x2g.16xlarge
-      - title: Memory Optimized 768 GiB, 96 vCPUs (db.r6i.24xlarge)
-        const: db.r6i.24xlarge
-      - title: Memory Optimized 768 GiB, 96 vCPUs (db.r5.24xlarge)
-        const: db.r5.24xlarge
-      - title: Memory Optimized 1024 GiB, 128 vCPUs (db.r6i.32xlarge)
-        const: db.r6i.32xlarge
+        - title: Serverless 2GiB / 1 ACU (db.serverless)
+          const: db.serverless
+        - title: Burstable 4 GiB, 2 vCPUs (db.t3.medium)
+          const: db.t3.medium
+        - title: Burstable 4 GiB, 2 vCPUs (db.t4g.medium)
+          const: db.t4g.medium
+        - title: Burstable 8 GiB, 2 vCPUs (db.t4g.large)
+          const: db.t4g.large
+        - title: Burstable 8 GiB, 2 vCPUs (db.t3.large)
+          const: db.t3.large
+        - title: Memory Optimized 16 GiB, 2 vCPUs (db.r6g.large)
+          const: db.r6g.large
+        - title: Memory Optimized 16 GiB, 2 vCPUs (db.r6i.large)
+          const: db.r6i.large
+        - title: Memory Optimized 16 GiB, 2 vCPUs (db.r5.large)
+          const: db.r5.large
+        - title: Memory Optimized 32 GiB, 2 vCPUs (db.x2g.large)
+          const: db.x2g.large
+        - title: Memory Optimized 32 GiB, 4 vCPUs (db.r5.xlarge)
+          const: db.r5.xlarge
+        - title: Memory Optimized 32 GiB, 4 vCPUs (db.r6g.xlarge)
+          const: db.r6g.xlarge
+        - title: Memory Optimized 32 GiB, 4 vCPUs (db.r6i.xlarge)
+          const: db.r6i.xlarge
+        - title: Memory Optimized 64 GiB, 4 vCPUs (db.x2g.xlarge)
+          const: db.x2g.xlarge
+        - title: Memory Optimized 64 GiB, 8 vCPUs (db.r6i.2xlarge)
+          const: db.r6i.2xlarge
+        - title: Memory Optimized 64 GiB, 8 vCPUs (db.r5.2xlarge)
+          const: db.r5.2xlarge
+        - title: Memory Optimized 64 GiB, 8 vCPUs (db.r6g.2xlarge)
+          const: db.r6g.2xlarge
+        - title: Memory Optimized 128 GiB, 8 vCPUs (db.x2g.2xlarge)
+          const: db.x2g.2xlarge
+        - title: Memory Optimized 128 GiB, 16 vCPUs (db.r6g.4xlarge)
+          const: db.r6g.4xlarge
+        - title: Memory Optimized 128 GiB, 16 vCPUs (db.r6i.4xlarge)
+          const: db.r6i.4xlarge
+        - title: Memory Optimized 128 GiB, 16 vCPUs (db.r5.4xlarge)
+          const: db.r5.4xlarge
+        - title: Memory Optimized 256 GiB, 16 vCPUs (db.x2g.4xlarge)
+          const: db.x2g.4xlarge
+        - title: Memory Optimized 256 GiB, 32 vCPUs (db.r6g.8xlarge)
+          const: db.r6g.8xlarge
+        - title: Memory Optimized 256 GiB, 32 vCPUs (db.r6i.8xlarge)
+          const: db.r6i.8xlarge
+        - title: Memory Optimized 256 GiB, 32 vCPUs (db.r5.8xlarge)
+          const: db.r5.8xlarge
+        - title: Memory Optimized 512 GiB, 32 vCPUs (db.x2g.8xlarge)
+          const: db.x2g.8xlarge
+        - title: Memory Optimized 384 GiB, 48 vCPUs (db.r6i.12xlarge)
+          const: db.r6i.12xlarge
+        - title: Memory Optimized 384 GiB, 48 vCPUs (db.r5.12xlarge)
+          const: db.r5.12xlarge
+        - title: Memory Optimized 384 GiB, 48 vCPUs (db.r6g.12xlarge)
+          const: db.r6g.12xlarge
+        - title: Memory Optimized 768 GiB, 48 vCPUs (db.x2g.12xlarge)
+          const: db.x2g.12xlarge
+        - title: Memory Optimized 512 GiB, 64 vCPUs (db.r5.16xlarge)
+          const: db.r5.16xlarge
+        - title: Memory Optimized 512 GiB, 64 vCPUs (db.r6g.16xlarge)
+          const: db.r6g.16xlarge
+        - title: Memory Optimized 512 GiB, 64 vCPUs (db.r6i.16xlarge)
+          const: db.r6i.16xlarge
+        - title: Memory Optimized 1024 GiB, 64 vCPUs (db.x2g.16xlarge)
+          const: db.x2g.16xlarge
+        - title: Memory Optimized 768 GiB, 96 vCPUs (db.r6i.24xlarge)
+          const: db.r6i.24xlarge
+        - title: Memory Optimized 768 GiB, 96 vCPUs (db.r5.24xlarge)
+          const: db.r5.24xlarge
+        - title: Memory Optimized 1024 GiB, 128 vCPUs (db.r6i.32xlarge)
+          const: db.r6i.32xlarge
 connections:
   required:
-  - vpc
-  - aws_authentication
+    - vpc
+    - aws_authentication
   properties:
     vpc:
       "$ref": massdriver/aws-vpc
@@ -832,8 +841,8 @@ connections:
       "$ref": massdriver/aws-iam-role
 artifacts:
   required:
-  - writer
-  - readers
+    - writer
+    - readers
   properties:
     writer:
       "$ref": massdriver/postgresql-authentication
@@ -841,42 +850,42 @@ artifacts:
       "$ref": massdriver/postgresql-authentication
 ui:
   ui:order:
-  - database
-  - availability
-  - observability
-  - backups
-  - "*"
-  - networking
+    - database
+    - availability
+    - observability
+    - backups
+    - "*"
+    - networking
   availability:
     ui:order:
-    - autoscaling_mode
-    - min_replicas
-    - max_replicas
-    - target_value
-    - scale_in_cooldown
-    - scale_out_cooldown
+      - autoscaling_mode
+      - min_replicas
+      - max_replicas
+      - target_value
+      - scale_in_cooldown
+      - scale_out_cooldown
   database:
     version:
       ui:field: versioningDropdown
     ui:order:
-    - version
-    - source_snapshot
-    - ca_cert_identifier
-    - instance_class
-    - serverless_scaling
-    - deletion_protection
+      - version
+      - source_snapshot
+      - ca_cert_identifier
+      - instance_class
+      - serverless_scaling
+      - deletion_protection
     serverless_scaling:
       ui:order:
-      - min_capacity
-      - max_capacity
+        - min_capacity
+        - max_capacity
   backups:
     ui:order:
-    - retention_period
-    - skip_final_snapshot
-    - "*"
+      - retention_period
+      - skip_final_snapshot
+      - "*"
   observability:
     ui:order:
-    - enable_cloudwatch_logs_export
-    - enhanced_monitoring_interval
-    - performance_insights_retention_period
-    - "*"
+      - enable_cloudwatch_logs_export
+      - enhanced_monitoring_interval
+      - performance_insights_retention_period
+      - "*"
