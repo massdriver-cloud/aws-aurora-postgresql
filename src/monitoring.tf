@@ -36,7 +36,7 @@ module "cluster_volume_bytes_used" {
 
   md_metadata         = var.md_metadata
   display_name        = "Cluster Volume Bytes Used"
-  message             = "RDS Aurora ${aws_rds_cluster.main.cluster_identifier}: Cluster Volume Bytes Used has exceed capacity of ${local.alarms.cluster_volume_bytes_used.threshold}"
+  message             = "RDS Aurora ${aws_rds_cluster.main.cluster_identifier}: Cluster Volume Bytes Used has exceeded capacity of ${local.alarms.cluster_volume_bytes_used.threshold}"
   alarm_name          = "${aws_rds_cluster.main.cluster_identifier}-highClusterVolumeBytesUsed"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
