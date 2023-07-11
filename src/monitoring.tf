@@ -1,12 +1,14 @@
 locals {
   // 128 tebibytes (TiB)
-  _cluster_volume_bytes_max           = 140700000000000
-  _cluster_volume_bytes_max_threshold = 0.9
+  _cluster_volume_bytes_max_tib               = 128
+  _cluster_volume_bytes_max_bytes             = local._cluster_volume_bytes_max_tib * 1024 * 1024 * 1024 * 1024
+  _cluster_volume_bytes_max_threshold         = 90
+  _cluster_volume_bytes_max_threshold_percent = local._cluster_volume_bytes_max_threshold / 100.0
   automated_alarms = {
     cluster_volume_bytes_used = {
       period    = 300
-      threshold = floor(local._cluster_volume_bytes_max * local._cluster_volume_bytes_max_threshold)
-      statistic = "Average"
+      threshold = floor(local._cluster_volume_bytes_max_bytes * local._cluster_volume_bytes_max_threshold_percent)
+      statistic = "Maximum"
     }
   }
   alarms_map = {
@@ -36,7 +38,7 @@ module "cluster_volume_bytes_used" {
 
   md_metadata         = var.md_metadata
   display_name        = "Cluster Volume Bytes Used"
-  message             = "RDS Aurora ${aws_rds_cluster.main.cluster_identifier}: Cluster Volume Bytes Used has exceeded capacity of ${local.alarms.cluster_volume_bytes_used.threshold}"
+  message             = "RDS Aurora ${aws_rds_cluster.main.cluster_identifier}: Cluster Volume Bytes Used has exceeded ${local._cluster_volume_bytes_max_threshold}% of ${local._cluster_volume_bytes_max_tib}TiB"
   alarm_name          = "${aws_rds_cluster.main.cluster_identifier}-highClusterVolumeBytesUsed"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
