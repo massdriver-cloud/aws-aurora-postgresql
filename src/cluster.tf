@@ -13,7 +13,7 @@ resource "aws_rds_cluster" "main" {
   deletion_protection = var.database.deletion_protection
   snapshot_identifier = lookup(var.database, "source_snapshot", null)
 
-  ## Networking&
+  ## Networking
   db_subnet_group_name   = aws_db_subnet_group.main.name
   port                   = local.postgresql.port
   vpc_security_group_ids = [aws_security_group.main.id]
@@ -35,11 +35,14 @@ resource "aws_rds_cluster" "main" {
   # db_cluster_parameter_group_name - (Optional) A cluster parameter group to associate with the cluster.
   # db_instance_parameter_group_name - (Optional) Instance parameter group to associate with all instances of the DB cluster. The db_instance_parameter_group_name parameter is only valid in combination with the allow_major_version_upgrade parameter.
 
-  dynamic "serverlessv2_scaling_configuration" {
-    for_each = local.is_serverless ? ["noop"] : []
-    content {
-      min_capacity = lookup(var.database.serverless_scaling, "min_capacity")
-      max_capacity = lookup(var.database.serverless_scaling, "max_capacity")
-    }
+  # This originally used a dynamic block to set the scaling or exclude the block if not instance type serverless,
+  #   but when switching instance types terraform would get confused still requiring min_capacity & max_capacity even though
+  #   it was no longer "serverless"
+  #
+  # This sets the serverless values no matter what, defaulting to minimums. The instance type
+  #   still controls whether its serverless or not.
+  serverlessv2_scaling_configuration {
+    min_capacity = lookup(var.database.serverless_scaling, "min_capacity", 0.5)
+    max_capacity = lookup(var.database.serverless_scaling, "max_capacity", 1.0)
   }
 }
