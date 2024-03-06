@@ -42,7 +42,7 @@ resource "aws_rds_cluster" "main" {
   # This sets the serverless values no matter what, defaulting to minimums. The instance type
   #   still controls whether its serverless or not.
   serverlessv2_scaling_configuration {
-    min_capacity = local.effective_serverless_scaling.min_capacity
-    max_capacity = local.effective_serverless_scaling.max_capacity
+    min_capacity = local.serverless_scaling.min_capacity
+    max_capacity = local.serverless_scaling.max_capacity
   }
 }
