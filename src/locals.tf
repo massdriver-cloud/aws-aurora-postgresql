@@ -19,6 +19,16 @@ locals {
   enhanced_monitoring_enabled           = lookup(var.observability, "enhanced_monitoring_interval", 0) > 0
   autoscaling_enabled                   = var.availability.autoscaling_mode != "DISABLED"
 
+  default_serverless_scaling = {
+    min_capacity = 0.5
+    max_capacity = 1.0
+  }
+
+  effective_serverless_scaling = merge(
+    local.default_serverless_scaling,
+    var.database.serverless_scaling != null ? var.database.serverless_scaling : {}
+  )
+
   # Primary + Replicas
   # We don't differentiate the primary as a terraform resource in the event that their is a failover
   # AWS will promote a replica. By not differentiating the naming/tf resource we avoid
