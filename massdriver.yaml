@@ -317,6 +317,18 @@ params:
             - "14.4"
             - "14.5"
             - "14.6"
+            - "14.7"
+            - "14.8"
+            - "14.9"
+            - "14.10"
+            - "14.11"
+            - "15.2"
+            - "15.3"
+            - "15.4"
+            - "15.5"
+            - "15.6"
+            - "16.1"
+            - "16.2"
           default: "14.6"
         deletion_protection:
           "$ref": https://raw.githubusercontent.com/massdriver-cloud/json-schemas/main/aws/rds/deletion_protection.json
