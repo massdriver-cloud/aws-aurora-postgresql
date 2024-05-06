@@ -329,7 +329,7 @@ params:
             - "15.6"
             - "16.1"
             - "16.2"
-          default: "14.6"
+          default: "16.2"
         deletion_protection:
           "$ref": https://raw.githubusercontent.com/massdriver-cloud/json-schemas/main/aws/rds/deletion_protection.json
       if:
