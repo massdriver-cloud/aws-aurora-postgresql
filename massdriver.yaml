@@ -443,11 +443,6 @@ params:
                 "$ref": "#/$defs/instance-class-group-5fa726788b1e46735cb3d7058b43ced9e971bd1d96c76a18875b5f664a1bbf28"
           - properties:
               version:
-                const: "16.2"
-              instance_class:
-                "$ref": "#/$defs/instance-class-group-5fa726788b1e46735cb3d7058b43ced9e971bd1d96c76a18875b5f664a1bbf28"
-          - properties:
-              version:
                 const: "14.7"
               instance_class:
                 "$ref": "#/$defs/instance-class-group-643f948abe440766066890be0f99ac9d2c81ba35362f7f8b5de75dd658ea5eca"
