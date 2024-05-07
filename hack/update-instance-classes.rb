@@ -155,7 +155,7 @@ conf["params"]["$defs"] = {}
 engine_version_to_instance_class_group.values.uniq.each do |group_id|
   formatted_instance_classes = $instances_classes_in_group[group_id].
     map {|rds_instance_class| $instance_classes[rds_instance_class]}.
-    sort { |a,b| [a[:DefaultVCpus], a[:SizeInGiB]] <=> [b[:DefaultVCpus] , b[:SizeInGiB]]}.
+    sort { |a,b| [a.fetch(:DefaultVCpus, 0), a.fetch(:SizeInGiB, 0)] <=> [b.fetch(:DefaultVCpus, 0) , b.fetch(:SizeInGiB, 0)]}.
     map {|ic| {"title" => ic[:Label], "const" => ic[:RDSInstanceType]}}
 
   conf["params"]["$defs"]["instance-class-group-#{group_id}"] = {
@@ -185,7 +185,7 @@ supported_engine_versions.each do |version|
       "properties" => {
         "version" => {"const" => version},
         "instance_class" => {
-          "$ref" => ref_name
+          $ref => ref_name
         }
       }
     }
