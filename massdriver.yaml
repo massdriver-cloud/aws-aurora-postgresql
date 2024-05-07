@@ -292,6 +292,7 @@ params:
           - '12.15'
           - '12.16'
           - '12.17'
+          - '12.18'
           - '13.7'
           - '13.8'
           - '13.9'
@@ -299,6 +300,7 @@ params:
           - '13.11'
           - '13.12'
           - '13.13'
+          - '13.14'
           - '14.3'
           - '14.4'
           - '14.5'
@@ -307,10 +309,15 @@ params:
           - '14.8'
           - '14.9'
           - '14.10'
+          - '14.11'
           - '15.2'
           - '15.3'
           - '15.4'
           - '15.5'
+          - '15.6'
+          - '16.1'
+          - '16.2'
+          default: '16.2'
         deletion_protection:
           "$ref": https://raw.githubusercontent.com/massdriver-cloud/json-schemas/main/aws/rds/deletion_protection.json
       if:
@@ -378,6 +385,11 @@ params:
                 "$ref": "#/$defs/instance-class-group-6822d93b7056af17af447f9a2e0a773dc50836afb527a305bf758bc9634a66a0"
           - properties:
               version:
+                const: '12.18'
+              instance_class:
+                "$ref": "#/$defs/instance-class-group-6822d93b7056af17af447f9a2e0a773dc50836afb527a305bf758bc9634a66a0"
+          - properties:
+              version:
                 const: '13.7'
               instance_class:
                 "$ref": "#/$defs/instance-class-group-5fa726788b1e46735cb3d7058b43ced9e971bd1d96c76a18875b5f664a1bbf28"
@@ -409,6 +421,11 @@ params:
           - properties:
               version:
                 const: '13.13'
+              instance_class:
+                "$ref": "#/$defs/instance-class-group-e614c4f593221b5237a4968818278ab54df12d2c084ef786849c96f46a9735b9"
+          - properties:
+              version:
+                const: '13.14'
               instance_class:
                 "$ref": "#/$defs/instance-class-group-e614c4f593221b5237a4968818278ab54df12d2c084ef786849c96f46a9735b9"
           - properties:
@@ -453,6 +470,11 @@ params:
                 "$ref": "#/$defs/instance-class-group-c043f977ee1deecdb95f2d7bf84cd4dde3fa62e42e934a47619ed2311997ef23"
           - properties:
               version:
+                const: '14.11'
+              instance_class:
+                "$ref": "#/$defs/instance-class-group-c043f977ee1deecdb95f2d7bf84cd4dde3fa62e42e934a47619ed2311997ef23"
+          - properties:
+              version:
                 const: '15.2'
               instance_class:
                 "$ref": "#/$defs/instance-class-group-e614c4f593221b5237a4968818278ab54df12d2c084ef786849c96f46a9735b9"
@@ -473,7 +495,17 @@ params:
                 "$ref": "#/$defs/instance-class-group-c043f977ee1deecdb95f2d7bf84cd4dde3fa62e42e934a47619ed2311997ef23"
           - properties:
               version:
+                const: '15.6'
+              instance_class:
+                "$ref": "#/$defs/instance-class-group-c043f977ee1deecdb95f2d7bf84cd4dde3fa62e42e934a47619ed2311997ef23"
+          - properties:
+              version:
                 const: '16.1'
+              instance_class:
+                "$ref": "#/$defs/instance-class-group-c043f977ee1deecdb95f2d7bf84cd4dde3fa62e42e934a47619ed2311997ef23"
+          - properties:
+              version:
+                const: '16.2'
               instance_class:
                 "$ref": "#/$defs/instance-class-group-c043f977ee1deecdb95f2d7bf84cd4dde3fa62e42e934a47619ed2311997ef23"
     networking:

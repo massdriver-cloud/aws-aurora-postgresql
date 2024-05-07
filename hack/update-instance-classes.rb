@@ -30,7 +30,7 @@ $mdyaml = "massdriver.yaml"
 conf = YAML.load(File.read($mdyaml))
 
 def maybe_get_data(cmd, file, force)
-  if !File.exists?(file) || force
+  if !File.exist?(file) || force
     `#{cmd} > #{file}`
   else
     puts "#{file} exists, skipping fetch..."
