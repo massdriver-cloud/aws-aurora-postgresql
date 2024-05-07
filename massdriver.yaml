@@ -720,174 +720,88 @@ params:
       oneOf:
       - title: Serverless 2GiB / 1 ACU (db.serverless)
         const: db.serverless
-      - title: Serverless 2GiB / 1 ACU (db.serverless)
-        const: db.serverless
-      - title: Burstable 4 GiB, 2 vCPUs (db.t3.medium)
-        const: db.t3.medium
       - title: Burstable 4 GiB, 2 vCPUs (db.t3.medium)
         const: db.t3.medium
       - title: Burstable 4 GiB, 2 vCPUs (db.t4g.medium)
         const: db.t4g.medium
-      - title: Burstable 4 GiB, 2 vCPUs (db.t4g.medium)
-        const: db.t4g.medium
-      - title: Burstable 8 GiB, 2 vCPUs (db.t3.large)
-        const: db.t3.large
       - title: Burstable 8 GiB, 2 vCPUs (db.t3.large)
         const: db.t3.large
       - title: Burstable 8 GiB, 2 vCPUs (db.t4g.large)
         const: db.t4g.large
-      - title: Burstable 8 GiB, 2 vCPUs (db.t4g.large)
-        const: db.t4g.large
-      - title: Memory Optimized 16 GiB, 2 vCPUs (db.r5.large)
-        const: db.r5.large
       - title: Memory Optimized 16 GiB, 2 vCPUs (db.r5.large)
         const: db.r5.large
       - title: Memory Optimized 16 GiB, 2 vCPUs (db.r6g.large)
         const: db.r6g.large
-      - title: Memory Optimized 16 GiB, 2 vCPUs (db.r6g.large)
-        const: db.r6g.large
-      - title: Memory Optimized 16 GiB, 2 vCPUs (db.r6i.large)
-        const: db.r6i.large
       - title: Memory Optimized 16 GiB, 2 vCPUs (db.r6i.large)
         const: db.r6i.large
       - title: Memory Optimized 16 GiB, 2 vCPUs (db.r7g.large)
         const: db.r7g.large
-      - title: Memory Optimized 16 GiB, 2 vCPUs (db.r7g.large)
-        const: db.r7g.large
-      - title: Memory Optimized 32 GiB, 2 vCPUs (db.x2g.large)
-        const: db.x2g.large
       - title: Memory Optimized 32 GiB, 2 vCPUs (db.x2g.large)
         const: db.x2g.large
       - title: Memory Optimized 32 GiB, 4 vCPUs (db.r5.xlarge)
         const: db.r5.xlarge
-      - title: Memory Optimized 32 GiB, 4 vCPUs (db.r5.xlarge)
-        const: db.r5.xlarge
-      - title: Memory Optimized 32 GiB, 4 vCPUs (db.r6g.xlarge)
-        const: db.r6g.xlarge
       - title: Memory Optimized 32 GiB, 4 vCPUs (db.r6g.xlarge)
         const: db.r6g.xlarge
       - title: Memory Optimized 32 GiB, 4 vCPUs (db.r6i.xlarge)
         const: db.r6i.xlarge
-      - title: Memory Optimized 32 GiB, 4 vCPUs (db.r6i.xlarge)
-        const: db.r6i.xlarge
-      - title: Memory Optimized 32 GiB, 4 vCPUs (db.r7g.xlarge)
-        const: db.r7g.xlarge
       - title: Memory Optimized 32 GiB, 4 vCPUs (db.r7g.xlarge)
         const: db.r7g.xlarge
       - title: Memory Optimized 64 GiB, 4 vCPUs (db.x2g.xlarge)
         const: db.x2g.xlarge
-      - title: Memory Optimized 64 GiB, 4 vCPUs (db.x2g.xlarge)
-        const: db.x2g.xlarge
-      - title: Memory Optimized 64 GiB, 8 vCPUs (db.r5.2xlarge)
-        const: db.r5.2xlarge
       - title: Memory Optimized 64 GiB, 8 vCPUs (db.r5.2xlarge)
         const: db.r5.2xlarge
       - title: Memory Optimized 64 GiB, 8 vCPUs (db.r6g.2xlarge)
         const: db.r6g.2xlarge
-      - title: Memory Optimized 64 GiB, 8 vCPUs (db.r6g.2xlarge)
-        const: db.r6g.2xlarge
-      - title: Memory Optimized 64 GiB, 8 vCPUs (db.r6i.2xlarge)
-        const: db.r6i.2xlarge
       - title: Memory Optimized 64 GiB, 8 vCPUs (db.r6i.2xlarge)
         const: db.r6i.2xlarge
       - title: Memory Optimized 64 GiB, 8 vCPUs (db.r7g.2xlarge)
         const: db.r7g.2xlarge
-      - title: Memory Optimized 64 GiB, 8 vCPUs (db.r7g.2xlarge)
-        const: db.r7g.2xlarge
-      - title: Memory Optimized 128 GiB, 8 vCPUs (db.x2g.2xlarge)
-        const: db.x2g.2xlarge
       - title: Memory Optimized 128 GiB, 8 vCPUs (db.x2g.2xlarge)
         const: db.x2g.2xlarge
       - title: Memory Optimized 128 GiB, 16 vCPUs (db.r5.4xlarge)
         const: db.r5.4xlarge
-      - title: Memory Optimized 128 GiB, 16 vCPUs (db.r5.4xlarge)
-        const: db.r5.4xlarge
-      - title: Memory Optimized 128 GiB, 16 vCPUs (db.r6g.4xlarge)
-        const: db.r6g.4xlarge
       - title: Memory Optimized 128 GiB, 16 vCPUs (db.r6g.4xlarge)
         const: db.r6g.4xlarge
       - title: Memory Optimized 128 GiB, 16 vCPUs (db.r6i.4xlarge)
-        const: db.r6i.4xlarge
-      - title: Memory Optimized 128 GiB, 16 vCPUs (db.r6i.4xlarge)
-        const: db.r6i.4xlarge
-      - title: Memory Optimized 128 GiB, 16 vCPUs (db.r7g.4xlarge)
         const: db.r7g.4xlarge
       - title: Memory Optimized 128 GiB, 16 vCPUs (db.r7g.4xlarge)
         const: db.r7g.4xlarge
       - title: Memory Optimized 256 GiB, 16 vCPUs (db.x2g.4xlarge)
         const: db.x2g.4xlarge
-      - title: Memory Optimized 256 GiB, 16 vCPUs (db.x2g.4xlarge)
-        const: db.x2g.4xlarge
-      - title: Memory Optimized 256 GiB, 32 vCPUs (db.r5.8xlarge)
-        const: db.r5.8xlarge
       - title: Memory Optimized 256 GiB, 32 vCPUs (db.r5.8xlarge)
         const: db.r5.8xlarge
       - title: Memory Optimized 256 GiB, 32 vCPUs (db.r6g.8xlarge)
         const: db.r6g.8xlarge
-      - title: Memory Optimized 256 GiB, 32 vCPUs (db.r6g.8xlarge)
-        const: db.r6g.8xlarge
-      - title: Memory Optimized 256 GiB, 32 vCPUs (db.r6i.8xlarge)
-        const: db.r6i.8xlarge
       - title: Memory Optimized 256 GiB, 32 vCPUs (db.r6i.8xlarge)
         const: db.r6i.8xlarge
       - title: Memory Optimized 256 GiB, 32 vCPUs (db.r7g.8xlarge)
         const: db.r7g.8xlarge
-      - title: Memory Optimized 256 GiB, 32 vCPUs (db.r7g.8xlarge)
-        const: db.r7g.8xlarge
-      - title: Memory Optimized 512 GiB, 32 vCPUs (db.x2g.8xlarge)
-        const: db.x2g.8xlarge
       - title: Memory Optimized 512 GiB, 32 vCPUs (db.x2g.8xlarge)
         const: db.x2g.8xlarge
       - title: Memory Optimized 384 GiB, 48 vCPUs (db.r5.12xlarge)
         const: db.r5.12xlarge
-      - title: Memory Optimized 384 GiB, 48 vCPUs (db.r5.12xlarge)
-        const: db.r5.12xlarge
-      - title: Memory Optimized 384 GiB, 48 vCPUs (db.r6g.12xlarge)
-        const: db.r6g.12xlarge
       - title: Memory Optimized 384 GiB, 48 vCPUs (db.r6g.12xlarge)
         const: db.r6g.12xlarge
       - title: Memory Optimized 384 GiB, 48 vCPUs (db.r6i.12xlarge)
         const: db.r6i.12xlarge
-      - title: Memory Optimized 384 GiB, 48 vCPUs (db.r6i.12xlarge)
-        const: db.r6i.12xlarge
-      - title: Memory Optimized 384 GiB, 48 vCPUs (db.r7g.12xlarge)
-        const: db.r7g.12xlarge
       - title: Memory Optimized 384 GiB, 48 vCPUs (db.r7g.12xlarge)
         const: db.r7g.12xlarge
       - title: Memory Optimized 768 GiB, 48 vCPUs (db.x2g.12xlarge)
         const: db.x2g.12xlarge
-      - title: Memory Optimized 768 GiB, 48 vCPUs (db.x2g.12xlarge)
-        const: db.x2g.12xlarge
-      - title: Memory Optimized 512 GiB, 64 vCPUs (db.r5.16xlarge)
-        const: db.r5.16xlarge
       - title: Memory Optimized 512 GiB, 64 vCPUs (db.r5.16xlarge)
         const: db.r5.16xlarge
       - title: Memory Optimized 512 GiB, 64 vCPUs (db.r6g.16xlarge)
         const: db.r6g.16xlarge
-      - title: Memory Optimized 512 GiB, 64 vCPUs (db.r6g.16xlarge)
-        const: db.r6g.16xlarge
-      - title: Memory Optimized 512 GiB, 64 vCPUs (db.r6i.16xlarge)
-        const: db.r6i.16xlarge
       - title: Memory Optimized 512 GiB, 64 vCPUs (db.r6i.16xlarge)
         const: db.r6i.16xlarge
       - title: Memory Optimized 512 GiB, 64 vCPUs (db.r7g.16xlarge)
         const: db.r7g.16xlarge
-      - title: Memory Optimized 512 GiB, 64 vCPUs (db.r7g.16xlarge)
-        const: db.r7g.16xlarge
-      - title: Memory Optimized 1024 GiB, 64 vCPUs (db.x2g.16xlarge)
-        const: db.x2g.16xlarge
       - title: Memory Optimized 1024 GiB, 64 vCPUs (db.x2g.16xlarge)
         const: db.x2g.16xlarge
       - title: Memory Optimized 768 GiB, 96 vCPUs (db.r5.24xlarge)
         const: db.r5.24xlarge
-      - title: Memory Optimized 768 GiB, 96 vCPUs (db.r5.24xlarge)
-        const: db.r5.24xlarge
       - title: Memory Optimized 768 GiB, 96 vCPUs (db.r6i.24xlarge)
         const: db.r6i.24xlarge
-      - title: Memory Optimized 768 GiB, 96 vCPUs (db.r6i.24xlarge)
-        const: db.r6i.24xlarge
-      - title: Memory Optimized 1024 GiB, 128 vCPUs (db.r6i.32xlarge)
-        const: db.r6i.32xlarge
       - title: Memory Optimized 1024 GiB, 128 vCPUs (db.r6i.32xlarge)
         const: db.r6i.32xlarge
     ? instance-class-group-32f3e5beafb3cb5da73fc7ea6de2575872a863edd9e0cb3d772cc7d44cefdc57
@@ -896,206 +810,104 @@ params:
       oneOf:
       - title: Serverless 2GiB / 1 ACU (db.serverless)
         const: db.serverless
-      - title: Serverless 2GiB / 1 ACU (db.serverless)
-        const: db.serverless
-      - title: Burstable 4 GiB, 2 vCPUs (db.t3.medium)
-        const: db.t3.medium
       - title: Burstable 4 GiB, 2 vCPUs (db.t3.medium)
         const: db.t3.medium
       - title: Burstable 4 GiB, 2 vCPUs (db.t4g.medium)
         const: db.t4g.medium
-      - title: Burstable 4 GiB, 2 vCPUs (db.t4g.medium)
-        const: db.t4g.medium
-      - title: Burstable 8 GiB, 2 vCPUs (db.t3.large)
-        const: db.t3.large
       - title: Burstable 8 GiB, 2 vCPUs (db.t3.large)
         const: db.t3.large
       - title: Burstable 8 GiB, 2 vCPUs (db.t4g.large)
         const: db.t4g.large
-      - title: Burstable 8 GiB, 2 vCPUs (db.t4g.large)
-        const: db.t4g.large
-      - title: Memory Optimized 16 GiB, 2 vCPUs (db.r5.large)
-        const: db.r5.large
       - title: Memory Optimized 16 GiB, 2 vCPUs (db.r5.large)
         const: db.r5.large
       - title: Memory Optimized 16 GiB, 2 vCPUs (db.r6g.large)
         const: db.r6g.large
-      - title: Memory Optimized 16 GiB, 2 vCPUs (db.r6g.large)
-        const: db.r6g.large
-      - title: Memory Optimized 16 GiB, 2 vCPUs (db.r6i.large)
-        const: db.r6i.large
       - title: Memory Optimized 16 GiB, 2 vCPUs (db.r6i.large)
         const: db.r6i.large
       - title: Memory Optimized 16 GiB, 2 vCPUs (db.r7g.large)
         const: db.r7g.large
-      - title: Memory Optimized 16 GiB, 2 vCPUs (db.r7g.large)
-        const: db.r7g.large
-      - title: Memory Optimized 32 GiB, 2 vCPUs (db.x2g.large)
-        const: db.x2g.large
       - title: Memory Optimized 32 GiB, 2 vCPUs (db.x2g.large)
         const: db.x2g.large
       - title: Memory Optimized 32 GiB, 4 vCPUs (db.r5.xlarge)
         const: db.r5.xlarge
-      - title: Memory Optimized 32 GiB, 4 vCPUs (db.r5.xlarge)
-        const: db.r5.xlarge
-      - title: Memory Optimized 32 GiB, 4 vCPUs (db.r6gd.xlarge)
-        const: db.r6gd.xlarge
       - title: Memory Optimized 32 GiB, 4 vCPUs (db.r6gd.xlarge)
         const: db.r6gd.xlarge
       - title: Memory Optimized 32 GiB, 4 vCPUs (db.r6g.xlarge)
         const: db.r6g.xlarge
-      - title: Memory Optimized 32 GiB, 4 vCPUs (db.r6g.xlarge)
-        const: db.r6g.xlarge
-      - title: Memory Optimized 32 GiB, 4 vCPUs (db.r6i.xlarge)
-        const: db.r6i.xlarge
       - title: Memory Optimized 32 GiB, 4 vCPUs (db.r6i.xlarge)
         const: db.r6i.xlarge
       - title: Memory Optimized 32 GiB, 4 vCPUs (db.r7g.xlarge)
         const: db.r7g.xlarge
-      - title: Memory Optimized 32 GiB, 4 vCPUs (db.r7g.xlarge)
-        const: db.r7g.xlarge
-      - title: Memory Optimized 64 GiB, 4 vCPUs (db.x2g.xlarge)
-        const: db.x2g.xlarge
       - title: Memory Optimized 64 GiB, 4 vCPUs (db.x2g.xlarge)
         const: db.x2g.xlarge
       - title: Memory Optimized 64 GiB, 8 vCPUs (db.r5.2xlarge)
         const: db.r5.2xlarge
-      - title: Memory Optimized 64 GiB, 8 vCPUs (db.r5.2xlarge)
-        const: db.r5.2xlarge
-      - title: Memory Optimized 64 GiB, 8 vCPUs (db.r6g.2xlarge)
-        const: db.r6g.2xlarge
       - title: Memory Optimized 64 GiB, 8 vCPUs (db.r6g.2xlarge)
         const: db.r6g.2xlarge
       - title: Memory Optimized 64 GiB, 8 vCPUs (db.r6gd.2xlarge)
         const: db.r6gd.2xlarge
-      - title: Memory Optimized 64 GiB, 8 vCPUs (db.r6gd.2xlarge)
-        const: db.r6gd.2xlarge
-      - title: Memory Optimized 64 GiB, 8 vCPUs (db.r6i.2xlarge)
-        const: db.r6i.2xlarge
       - title: Memory Optimized 64 GiB, 8 vCPUs (db.r6i.2xlarge)
         const: db.r6i.2xlarge
       - title: Memory Optimized 64 GiB, 8 vCPUs (db.r7g.2xlarge)
         const: db.r7g.2xlarge
-      - title: Memory Optimized 64 GiB, 8 vCPUs (db.r7g.2xlarge)
-        const: db.r7g.2xlarge
-      - title: Memory Optimized 128 GiB, 8 vCPUs (db.x2g.2xlarge)
-        const: db.x2g.2xlarge
       - title: Memory Optimized 128 GiB, 8 vCPUs (db.x2g.2xlarge)
         const: db.x2g.2xlarge
       - title: Memory Optimized 128 GiB, 16 vCPUs (db.r5.4xlarge)
         const: db.r5.4xlarge
-      - title: Memory Optimized 128 GiB, 16 vCPUs (db.r5.4xlarge)
-        const: db.r5.4xlarge
-      - title: Memory Optimized 128 GiB, 16 vCPUs (db.r6g.4xlarge)
-        const: db.r6g.4xlarge
       - title: Memory Optimized 128 GiB, 16 vCPUs (db.r6g.4xlarge)
         const: db.r6g.4xlarge
       - title: Memory Optimized 128 GiB, 16 vCPUs (db.r6gd.4xlarge)
         const: db.r6gd.4xlarge
-      - title: Memory Optimized 128 GiB, 16 vCPUs (db.r6gd.4xlarge)
-        const: db.r6gd.4xlarge
-      - title: Memory Optimized 128 GiB, 16 vCPUs (db.r6i.4xlarge)
-        const: db.r6i.4xlarge
       - title: Memory Optimized 128 GiB, 16 vCPUs (db.r6i.4xlarge)
         const: db.r6i.4xlarge
       - title: Memory Optimized 128 GiB, 16 vCPUs (db.r7g.4xlarge)
         const: db.r7g.4xlarge
-      - title: Memory Optimized 128 GiB, 16 vCPUs (db.r7g.4xlarge)
-        const: db.r7g.4xlarge
-      - title: Memory Optimized 256 GiB, 16 vCPUs (db.x2g.4xlarge)
-        const: db.x2g.4xlarge
       - title: Memory Optimized 256 GiB, 16 vCPUs (db.x2g.4xlarge)
         const: db.x2g.4xlarge
       - title: Memory Optimized 256 GiB, 32 vCPUs (db.r5.8xlarge)
         const: db.r5.8xlarge
-      - title: Memory Optimized 256 GiB, 32 vCPUs (db.r5.8xlarge)
-        const: db.r5.8xlarge
-      - title: Memory Optimized 256 GiB, 32 vCPUs (db.r6g.8xlarge)
-        const: db.r6g.8xlarge
       - title: Memory Optimized 256 GiB, 32 vCPUs (db.r6g.8xlarge)
         const: db.r6g.8xlarge
       - title: Memory Optimized 256 GiB, 32 vCPUs (db.r6gd.8xlarge)
         const: db.r6gd.8xlarge
-      - title: Memory Optimized 256 GiB, 32 vCPUs (db.r6gd.8xlarge)
-        const: db.r6gd.8xlarge
-      - title: Memory Optimized 256 GiB, 32 vCPUs (db.r6i.8xlarge)
-        const: db.r6i.8xlarge
       - title: Memory Optimized 256 GiB, 32 vCPUs (db.r6i.8xlarge)
         const: db.r6i.8xlarge
       - title: Memory Optimized 256 GiB, 32 vCPUs (db.r7g.8xlarge)
         const: db.r7g.8xlarge
-      - title: Memory Optimized 256 GiB, 32 vCPUs (db.r7g.8xlarge)
-        const: db.r7g.8xlarge
-      - title: Memory Optimized 512 GiB, 32 vCPUs (db.x2g.8xlarge)
-        const: db.x2g.8xlarge
       - title: Memory Optimized 512 GiB, 32 vCPUs (db.x2g.8xlarge)
         const: db.x2g.8xlarge
       - title: Memory Optimized 384 GiB, 48 vCPUs (db.r5.12xlarge)
         const: db.r5.12xlarge
-      - title: Memory Optimized 384 GiB, 48 vCPUs (db.r5.12xlarge)
-        const: db.r5.12xlarge
-      - title: Memory Optimized 384 GiB, 48 vCPUs (db.r6g.12xlarge)
-        const: db.r6g.12xlarge
       - title: Memory Optimized 384 GiB, 48 vCPUs (db.r6g.12xlarge)
         const: db.r6g.12xlarge
       - title: Memory Optimized 384 GiB, 48 vCPUs (db.r6gd.12xlarge)
         const: db.r6gd.12xlarge
-      - title: Memory Optimized 384 GiB, 48 vCPUs (db.r6gd.12xlarge)
-        const: db.r6gd.12xlarge
-      - title: Memory Optimized 384 GiB, 48 vCPUs (db.r6i.12xlarge)
-        const: db.r6i.12xlarge
       - title: Memory Optimized 384 GiB, 48 vCPUs (db.r6i.12xlarge)
         const: db.r6i.12xlarge
       - title: Memory Optimized 384 GiB, 48 vCPUs (db.r7g.12xlarge)
         const: db.r7g.12xlarge
-      - title: Memory Optimized 384 GiB, 48 vCPUs (db.r7g.12xlarge)
-        const: db.r7g.12xlarge
-      - title: Memory Optimized 768 GiB, 48 vCPUs (db.x2g.12xlarge)
-        const: db.x2g.12xlarge
       - title: Memory Optimized 768 GiB, 48 vCPUs (db.x2g.12xlarge)
         const: db.x2g.12xlarge
       - title: Memory Optimized 512 GiB, 64 vCPUs (db.r5.16xlarge)
         const: db.r5.16xlarge
-      - title: Memory Optimized 512 GiB, 64 vCPUs (db.r5.16xlarge)
-        const: db.r5.16xlarge
-      - title: Memory Optimized 512 GiB, 64 vCPUs (db.r6g.16xlarge)
-        const: db.r6g.16xlarge
       - title: Memory Optimized 512 GiB, 64 vCPUs (db.r6g.16xlarge)
         const: db.r6g.16xlarge
       - title: Memory Optimized 512 GiB, 64 vCPUs (db.r6gd.16xlarge)
         const: db.r6gd.16xlarge
-      - title: Memory Optimized 512 GiB, 64 vCPUs (db.r6gd.16xlarge)
-        const: db.r6gd.16xlarge
-      - title: Memory Optimized 512 GiB, 64 vCPUs (db.r6i.16xlarge)
-        const: db.r6i.16xlarge
       - title: Memory Optimized 512 GiB, 64 vCPUs (db.r6i.16xlarge)
         const: db.r6i.16xlarge
       - title: Memory Optimized 512 GiB, 64 vCPUs (db.r7g.16xlarge)
         const: db.r7g.16xlarge
-      - title: Memory Optimized 512 GiB, 64 vCPUs (db.r7g.16xlarge)
-        const: db.r7g.16xlarge
-      - title: Memory Optimized 1024 GiB, 64 vCPUs (db.x2g.16xlarge)
-        const: db.x2g.16xlarge
       - title: Memory Optimized 1024 GiB, 64 vCPUs (db.x2g.16xlarge)
         const: db.x2g.16xlarge
       - title: Memory Optimized 768 GiB, 96 vCPUs (db.r5.24xlarge)
         const: db.r5.24xlarge
-      - title: Memory Optimized 768 GiB, 96 vCPUs (db.r5.24xlarge)
-        const: db.r5.24xlarge
-      - title: Memory Optimized 768 GiB, 96 vCPUs (db.r6i.24xlarge)
-        const: db.r6i.24xlarge
       - title: Memory Optimized 768 GiB, 96 vCPUs (db.r6i.24xlarge)
         const: db.r6i.24xlarge
       - title: Memory Optimized 768 GiB, 96 vCPUs (db.r6id.24xlarge)
         const: db.r6id.24xlarge
-      - title: Memory Optimized 768 GiB, 96 vCPUs (db.r6id.24xlarge)
-        const: db.r6id.24xlarge
       - title: Memory Optimized 1024 GiB, 128 vCPUs (db.r6i.32xlarge)
         const: db.r6i.32xlarge
-      - title: Memory Optimized 1024 GiB, 128 vCPUs (db.r6i.32xlarge)
-        const: db.r6i.32xlarge
-      - title: Memory Optimized 1024 GiB, 128 vCPUs (db.r6id.32xlarge)
-        const: db.r6id.32xlarge
       - title: Memory Optimized 1024 GiB, 128 vCPUs (db.r6id.32xlarge)
         const: db.r6id.32xlarge
 connections:
