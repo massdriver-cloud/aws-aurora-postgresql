@@ -1,43 +1,89 @@
-# AWS Aurora PostgreSQL
+## AWS RDS PostgreSQL
 
-Amazon Aurora (Aurora) is a fully managed relational database engine that's compatible with PostgreSQL. You already know how PostgreSQL combines the speed and reliability of high-end commercial databases with the simplicity and cost-effectiveness of open-source databases. The code, tools, and applications you use today with your existing PostgreSQL databases can be used with Aurora. With some workloads, Aurora can deliver up to three times the throughput of PostgreSQL without requiring changes to most of your existing applications.
+Amazon RDS for PostgreSQL provides a fully managed relational database service that simplifies the setup, operation, and scaling of PostgreSQL deployments in the cloud.
 
-Aurora includes a high-performance storage subsystem. Its PostgreSQL-compatible database engines are customized to take advantage of that fast distributed storage. The underlying storage grows automatically as needed. An Aurora cluster volume can grow to a maximum size of 128 tebibytes (TiB). Aurora also automates and standardizes database clustering and replication, which are typically among the most challenging aspects of database configuration and administration.
+### Design Decisions
 
-Aurora is part of the managed database service Amazon Relational Database Service (Amazon RDS). Amazon RDS is a web service that makes it easier to set up, operate, and scale a relational database in the cloud.
+1. **Encryption**: The database is encrypted using a KMS key, ensuring that the data at rest is secure.
+2. **Backup and Recovery**: Automated backups are configured with a user-defined retention period. Final snapshots can be skipped or configured based on user preferences.
+3. **Network and Security**: The database is placed in a specific subnet group and security group, ensuring controlled access and network isolation.
+4. **Scaling**: Autoscaling for read replicas is supported, allowing the database to handle increasing or decreasing workloads dynamically.
+5. **Monitoring**: CloudWatch logging and enhanced monitoring are configurable to provide insights into database performance.
+6. **Parameter Management**: While the module supports flexibility in how instances are generated, it avoids complex dynamic blocks to prevent configuration issues.
 
-## Design Decisions
+### Runbook
 
-* Aurora Clusters can only be provisioned on internal or private subnets.
-* A KMS key is created for encryption and retained after cluster deletion.
-* Tags are copied to snapshots.
-* Daily snapshots are configured.
-* Root username and password are automatically generated to reduce exposure.
-  * Username is generated when not being restored from snapshot, otherwise it will use the snapshots username [note](https://github.com/hashicorp/terraform-provider-aws/pull/9505/files#diff-9d869fc908da636b09ac45e62cd373de7223e04ab7a2279385d6ea31004fcbacR92)
-  * Password is reset on snapshot restore
-* No schema is created by default.
-* No blue/green support as it is not supported for [PostgreSQL](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/blue-green-deployments-overview.html) yes.
-* Instances AZs are auto-assigned by AWS
-* 2 artifacts, one for the writer, one for the readers. If no readers the writer will be present here so you can
-  * For applications that dont use load balanced reader, the writer endpoint can be read from
-* Minimum retention period for backups is 1 day, as they [cannot be disabled in Aurora](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Managing.Backups.html)
+#### Connection Issues
 
-## Caveats
+To diagnose connection issues, check the security groups and subnet configurations.
 
+Verify security group rules:
 
-* IAM Authentication is *not* implemented, but on our roadmap. Please add a comment/thumbs up on this [issue](https://github.com/massdriver-cloud/aws-aurora-postgresql/issues/4) and we will prioritize.
-* RDS Proxy is *not* implemented, but on our roadmap. Please add a comment/thumbs up on this [issue](https://github.com/massdriver-cloud/aws-aurora-postgresql/issues/3) and we will prioritize.
-* Backup Plans are *not* implemented, but on our roadmap. Please add a comment/thumbs up on this [issue](https://github.com/massdriver-cloud/aws-aurora-postgresql/issues/5) and we will prioritize.
-* [Custom endpoints](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Overview.Endpoints.html#Aurora.Endpoints.Cluster) aren't currently on our roadmap. Please open an [issue](https://github.com/massdriver-cloud/aws-aurora-postgresql/issues) if you need support for this.
-* Cluster role associations aren't currently on our roadmap. Please open an [issue](https://github.com/massdriver-cloud/aws-aurora-postgresql/issues) if you need support for this.
-* Automatic minor version upgrades are disabled. Please open an [issue](https://github.com/massdriver-cloud/aws-aurora-postgresql/issues) if you need support for this.
-* No support for Aurora Global. Please open an [issue](https://github.com/massdriver-cloud/aws-aurora-postgresql/issues) if you need support for this.
-* No support for non-Aurora PostgreSQL. Please open an [issue](https://github.com/massdriver-cloud/aws-aurora-postgresql/issues) if you need support for this.
+```sh
+aws ec2 describe-security-groups --group-id ${SECURITY_GROUP_ID}
+```
 
+Confirm that the security group allows access to the PostgreSQL port (default 5432).
 
-## Links
+#### Database Performance Issues
 
-* [AWS Aurora Postgres User Guide](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.AuroraPostgreSQL.html)
-* [AWS Aurora User Guide](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Overview.html)
-* [AWS Aurora Serverless v2 Guide](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-serverless-v2.html)
-* [TLS w/ Serverless v2](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-serverless-v2-administration.html#aurora-serverless-v2.tls)
+Investigate the performance metrics using AWS CloudWatch.
+
+List recent CloudWatch metrics for the RDS instance:
+
+```sh
+aws cloudwatch get-metric-statistics --namespace "AWS/RDS" --metric-name "CPUUtilization" --start-time $(date -u -d '1 hour ago' +%FT%TZ) --end-time $(date -u +%FT%TZ) --period 300 --statistics "Average" --dimensions Name=DBInstanceIdentifier,Value=${DB_INSTANCE_IDENTIFIER}
+```
+
+This command retrieves the average CPU utilization for the past hour. High CPU utilization may indicate that the instance class needs to be upgraded.
+
+#### Slow Queries
+
+To identify slow queries, utilize the PostgreSQL `pg_stat_statements` extension if enabled.
+
+Connect to PostgreSQL:
+
+```sh
+psql "host=${DB_HOST} port=${DB_PORT} dbname=${DB_NAME} user=${DB_USER} password=${DB_PASSWORD}"
+```
+
+Run the following SQL to get the list of slow queries:
+
+```sql
+SELECT query, total_time, calls FROM pg_stat_statements ORDER BY total_time DESC LIMIT 5;
+```
+
+This will list the top 5 queries based on the total execution time.
+
+#### Debugging Backup Failures
+
+Examine the RDS logs and recent events for backup failures.
+
+Check recent events:
+
+```sh
+aws rds describe-events --source-identifier ${DB_INSTANCE_IDENTIFIER} --source-type db-instance --duration 60
+```
+
+This retrieves events from the past 60 minutes for the specified RDS instance. Look for entries related to backup failures.
+
+#### Storage Threshold Alerts
+
+If alarms based on storage thresholds are triggered, investigate immediately.
+
+List current alarms:
+
+```sh
+aws cloudwatch describe-alarms --alarm-names ${ALARM_NAME}
+```
+
+Examine the metrics leading to the alarm being triggered:
+
+```sh
+aws cloudwatch get-metric-statistics --namespace "AWS/RDS" --metric-name "VolumeBytesUsed" --start-time $(date -u -d '1 day ago' +%FT%TZ) --end-time $(date -u +%FT%TZ) --period 3600 --statistics "Maximum" --dimensions Name=DBClusterIdentifier,Value=${DB_CLUSTER_IDENTIFIER}
+```
+
+Evaluate if the RDS cluster is nearing its maximum storage capacity.
+
+Always ensure to replace `${VARIABLE}` with appropriate values specific to your RDS instance when running the commands.
+
