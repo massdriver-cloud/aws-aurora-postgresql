@@ -17,7 +17,7 @@ Amazon Aurora is a fully managed relational database engine that's compatible wi
 
 ## Design
 
-For detailed information, check out our [Operator Guide](operator.mdx) for this bundle.
+For detailed information, check out our [Operator Guide](operator.md) for this bundle.
 
 ## Usage
 

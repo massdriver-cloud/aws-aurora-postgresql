@@ -1,20 +1,30 @@
-## AWS Aurora PostgreSQL
+# AWS Aurora PostgreSQL
 
-Amazon Aurora PostgreSQL is a fully managed relational database engine that combines the performance and availability of high-end commercial databases with the simplicity and cost-effectiveness of open-source databases. It is compatible with PostgreSQL, making it easy to migrate existing PostgreSQL applications without changes to the code.
+Amazon Aurora (Aurora) is a fully managed relational database engine that's compatible with PostgreSQL. You already know how PostgreSQL combines the speed and reliability of high-end commercial databases with the simplicity and cost-effectiveness of open-source databases. The code, tools, and applications you use today with your existing PostgreSQL databases can be used with Aurora. With some workloads, Aurora can deliver up to three times the throughput of PostgreSQL without requiring changes to most of your existing applications.
 
-### Design Decisions
+Aurora includes a high-performance storage subsystem. Its PostgreSQL-compatible database engines are customized to take advantage of that fast distributed storage. The underlying storage grows automatically as needed. An Aurora cluster volume can grow to a maximum size of 128 tebibytes (TiB). Aurora also automates and standardizes database clustering and replication, which are typically among the most challenging aspects of database configuration and administration.
 
-1. **Database Encryption**: Uses AWS KMS for encryption with key rotation enabled to enhance security.
-2. **Network**: Limits exposure by setting up Security Groups and subnets for controlled inbound access.
-3. **Authentication**: Automatically generates unique root usernames and passwords for database access.
-4. **Scaling**: Configured for automatic scaling with defined policy parameters for handling load.
-5. **Observability**: Integrates with CloudWatch for enhanced logging and monitoring.
-6. **Storage Management**: Configured with backup strategies, encryption, and tagging for snapshots.
-7. **Performance Insights**: Option to enable insights for detailed performance analysis.
+Aurora is part of the managed database service Amazon Relational Database Service (Amazon RDS). Amazon RDS is a web service that makes it easier to set up, operate, and scale a relational database in the cloud.
 
-### Runbook
+## Design Decisions
 
-#### Connection Issues
+* Aurora Clusters can only be provisioned on internal or private subnets.
+* A KMS key is created for encryption and retained after cluster deletion.
+* Tags are copied to snapshots.
+* Daily snapshots are configured.
+* Root username and password are automatically generated to reduce exposure.
+  * Username is generated when not being restored from snapshot, otherwise it will use the snapshots username [note](https://github.com/hashicorp/terraform-provider-aws/pull/9505/files#diff-9d869fc908da636b09ac45e62cd373de7223e04ab7a2279385d6ea31004fcbacR92)
+  * Password is reset on snapshot restore
+* No schema is created by default.
+* No blue/green support as it is not supported for [PostgreSQL](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/blue-green-deployments-overview.html) yes.
+* Instances AZs are auto-assigned by AWS
+* 2 artifacts, one for the writer, one for the readers. If no readers the writer will be present here so you can
+  * For applications that dont use load balanced reader, the writer endpoint can be read from
+* Minimum retention period for backups is 1 day, as they [cannot be disabled in Aurora](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Managing.Backups.html)
+
+## Runbook
+
+### Connection Issues
 
 If unable to connect to the Aurora PostgreSQL cluster:
 
@@ -34,7 +44,7 @@ aws ec2 describe-security-groups --group-ids <security_group_id> --query "Securi
 
 > Confirm that the ingress rules allow traffic from your IP or subnet.
 
-#### High Latency Queries
+### High Latency Queries
 
 If queries are running slow, use the following commands to identify problematic queries:
 
@@ -58,7 +68,7 @@ SELECT pg_reload_conf();
 
 > This will log slow queries to help identify and optimize them.
 
-#### Backup Verification
+### Backup Verification
 
 Ensure your backups are being created and managed as expected.
 
@@ -78,7 +88,7 @@ aws rds describe-db-clusters --db-cluster-identifier <cluster_identifier> --quer
 
 > Ensure that the retention period is set according to your organization's policy.
 
-#### Disk Space Usage
+### Disk Space Usage
 
 Monitor and manage the disk space usage for your Aurora PostgreSQL cluster.
 
@@ -100,3 +110,11 @@ REINDEX DATABASE your_database_name;
 
 > Regular maintenance tasks like vacuum and reindex help to reclaim space and improve performance.
 
+
+
+## Links
+
+* [AWS Aurora Postgres User Guide](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.AuroraPostgreSQL.html)
+* [AWS Aurora User Guide](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Overview.html)
+* [AWS Aurora Serverless v2 Guide](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-serverless-v2.html)
+* [TLS w/ Serverless v2](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-serverless-v2-administration.html#aurora-serverless-v2.tls)
