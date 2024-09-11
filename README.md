@@ -67,7 +67,7 @@ Form input parameters for configuring a bundle for deployment.
     "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
     ```
 
-  - **`version`** *(string)*: Must be one of: `['11.9', '11.12', '11.13', '11.14', '11.15', '11.16', '11.17', '11.18', '12.7', '12.8', '12.9', '12.10', '12.11', '12.12', '12.13', '13.3', '13.4', '13.5', '13.6', '13.7', '13.8', '13.9', '14.3', '14.4', '14.5', '14.6']`. Default: `14.6`.
+  - **`version`** *(string)*: Must be one of: `['11.9', '11.21', '12.9', '12.11', '12.12', '12.13', '12.14', '12.15', '12.16', '12.17', '12.18', '13.7', '13.8', '13.9', '13.10', '13.11', '13.12', '13.13', '13.14', '14.3', '14.4', '14.5', '14.6', '14.7', '14.8', '14.9', '14.10', '14.11', '15.2', '15.3', '15.4', '15.5', '15.6', '16.1', '16.2']`. Default: `16.2`.
 - **`networking`** *(object)*
   - **`subnet_type`** *(string)*: Deploy to internal subnets (cannot reach the internet) or private subnets (internet egress traffic allowed). Must be one of: `['internal', 'private']`. Default: `internal`.
 - **`observability`** *(object)*
@@ -245,20 +245,6 @@ Connections from other bundles that this bundle depends on.
             "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
             ```
 
-          - **`aws_zone`** *(string)*: AWS Availability Zone.
-
-            Examples:
-          - **`cidr`** *(string)*
-
-            Examples:
-            ```json
-            "10.100.0.0/16"
-            ```
-
-            ```json
-            "192.24.12.0/22"
-            ```
-
 
           Examples:
       - **`private_subnets`** *(array)*
@@ -274,20 +260,6 @@ Connections from other bundles that this bundle depends on.
             "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
             ```
 
-          - **`aws_zone`** *(string)*: AWS Availability Zone.
-
-            Examples:
-          - **`cidr`** *(string)*
-
-            Examples:
-            ```json
-            "10.100.0.0/16"
-            ```
-
-            ```json
-            "192.24.12.0/22"
-            ```
-
 
           Examples:
       - **`public_subnets`** *(array)*
@@ -301,20 +273,6 @@ Connections from other bundles that this bundle depends on.
 
             ```json
             "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
-            ```
-
-          - **`aws_zone`** *(string)*: AWS Availability Zone.
-
-            Examples:
-          - **`cidr`** *(string)*
-
-            Examples:
-            ```json
-            "10.100.0.0/16"
-            ```
-
-            ```json
-            "192.24.12.0/22"
             ```
 
 
