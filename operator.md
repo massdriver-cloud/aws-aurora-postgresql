@@ -1,5 +1,5 @@
 
-# AWS Aurora PostgreSQL Combined Runbook
+# AWS Aurora PostgreSQL
 
 Amazon Aurora is a fully managed relational database engine that's compatible with PostgreSQL. This runbook will guide you through connecting to your Aurora PostgreSQL cluster, troubleshooting common issues, and monitoring your database's performance.
 
