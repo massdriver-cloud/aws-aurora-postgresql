@@ -163,6 +163,24 @@ WHERE last_autovacuum IS NOT NULL;
 
 ---
 
+## Design Decisions
+
+* Aurora Clusters can only be provisioned on internal or private subnets.
+* A KMS key is created for encryption and retained after cluster deletion.
+* Tags are copied to snapshots.
+* Daily snapshots are configured.
+* Root username and password are automatically generated to reduce exposure.
+  * Username is generated when not being restored from snapshot, otherwise it will use the snapshots username [note](https://github.com/hashicorp/terraform-provider-aws/pull/9505/files#diff-9d869fc908da636b09ac45e62cd373de7223e04ab7a2279385d6ea31004fcbacR92)
+  * Password is reset on snapshot restore
+* No schema is created by default.
+* No blue/green support as it is not supported for [PostgreSQL](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/blue-green-deployments-overview.html) yes.
+* Instances AZs are auto-assigned by AWS
+* 2 artifacts, one for the writer, one for the readers. If no readers the writer will be present here so you can
+  * For applications that dont use load balanced reader, the writer endpoint can be read from
+* Minimum retention period for backups is 1 day, as they [cannot be disabled in Aurora](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Managing.Backups.html)
+
+---
+
 ## Additional Resources
 
 - [AWS Aurora Postgres User Guide](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.AuroraPostgreSQL.html)
