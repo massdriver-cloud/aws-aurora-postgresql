@@ -28,15 +28,7 @@ variable "backup" {
     skip_final_snapshot = bool
   })
 }
-variable "database" {
-  type = object({
-    ca_cert_identifier  = string
-    deletion_protection = bool
-    source_snapshot     = optional(string)
-    version             = string
-    instance_class      = any
-  })
-}
+
 variable "md_metadata" {
   type = object({
     default_tags = object({
@@ -97,6 +89,20 @@ variable "vpc" {
       aws = optional(object({
         region = optional(string)
       }))
+    }))
+  })
+}
+// Auto-generated variable declarations from massdriver.yaml
+variable "database" {
+  type = object({
+    ca_cert_identifier  = string
+    deletion_protection = bool
+    source_snapshot     = optional(string)
+    version             = string
+    instance_class      = any
+    serverless_scaling = optional(object({
+      min_capacity = number
+      max_capacity = number
     }))
   })
 }
