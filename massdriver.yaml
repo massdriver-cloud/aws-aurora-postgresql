@@ -295,6 +295,7 @@ params:
           - '13.15'
           - '13.16'
           - '13.18'
+          - '13.20'
           - '14.6'
           - '14.8'
           - '14.9'
@@ -303,6 +304,7 @@ params:
           - '14.12'
           - '14.13'
           - '14.15'
+          - '14.17'
           - '15.3'
           - '15.4'
           - '15.5'
@@ -310,6 +312,7 @@ params:
           - '15.7'
           - '15.8'
           - '15.10'
+          - '15.12'
           - '16.1'
           - '16.2'
           - '16.3'
@@ -317,7 +320,10 @@ params:
           - 16.4-limitless
           - '16.6'
           - 16.6-limitless
-          default: 16.6-limitless
+          - '16.8'
+          - 16.8-limitless
+          - '17.4'
+          default: '17.4'
         deletion_protection:
           "$ref": https://raw.githubusercontent.com/massdriver-cloud/json-schemas/main/aws/rds/deletion_protection.json
       if:
@@ -395,6 +401,11 @@ params:
                 "$ref": "#/$defs/instance-class-group-2c8340b4db1966efa47b42dcb11f76f76263164db70403be7421c31768958115"
           - properties:
               version:
+                const: '13.20'
+              instance_class:
+                "$ref": "#/$defs/instance-class-group-2c8340b4db1966efa47b42dcb11f76f76263164db70403be7421c31768958115"
+          - properties:
+              version:
                 const: '14.6'
               instance_class:
                 "$ref": "#/$defs/instance-class-group-5fa726788b1e46735cb3d7058b43ced9e971bd1d96c76a18875b5f664a1bbf28"
@@ -435,6 +446,11 @@ params:
                 "$ref": "#/$defs/instance-class-group-c8334309ecade6fb2667ea87b661235e075d567f0248e6f0a0c1b2413d0a5995"
           - properties:
               version:
+                const: '14.17'
+              instance_class:
+                "$ref": "#/$defs/instance-class-group-c8334309ecade6fb2667ea87b661235e075d567f0248e6f0a0c1b2413d0a5995"
+          - properties:
+              version:
                 const: '15.3'
               instance_class:
                 "$ref": "#/$defs/instance-class-group-e614c4f593221b5237a4968818278ab54df12d2c084ef786849c96f46a9735b9"
@@ -466,6 +482,11 @@ params:
           - properties:
               version:
                 const: '15.10'
+              instance_class:
+                "$ref": "#/$defs/instance-class-group-c8334309ecade6fb2667ea87b661235e075d567f0248e6f0a0c1b2413d0a5995"
+          - properties:
+              version:
+                const: '15.12'
               instance_class:
                 "$ref": "#/$defs/instance-class-group-c8334309ecade6fb2667ea87b661235e075d567f0248e6f0a0c1b2413d0a5995"
           - properties:
@@ -503,6 +524,21 @@ params:
                 const: 16.6-limitless
               instance_class:
                 "$ref": "#/$defs/instance-class-group-b8867265dd817b012a3ba0f87a7537216844e13d9e0eec61ed5070f67751868d"
+          - properties:
+              version:
+                const: '16.8'
+              instance_class:
+                "$ref": "#/$defs/instance-class-group-c8334309ecade6fb2667ea87b661235e075d567f0248e6f0a0c1b2413d0a5995"
+          - properties:
+              version:
+                const: 16.8-limitless
+              instance_class:
+                "$ref": "#/$defs/instance-class-group-b8867265dd817b012a3ba0f87a7537216844e13d9e0eec61ed5070f67751868d"
+          - properties:
+              version:
+                const: '17.4'
+              instance_class:
+                "$ref": "#/$defs/instance-class-group-c8334309ecade6fb2667ea87b661235e075d567f0248e6f0a0c1b2413d0a5995"
     networking:
       title: Networking
       type: object
