@@ -99,7 +99,7 @@ variable "database" {
     deletion_protection = bool
     source_snapshot     = optional(string)
     version             = string
-    instance_class      = any
+    instance_class      = string
     serverless_scaling = optional(object({
       min_capacity = number
       max_capacity = number

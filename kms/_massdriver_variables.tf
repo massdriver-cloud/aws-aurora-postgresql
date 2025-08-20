@@ -34,7 +34,7 @@ variable "database" {
     deletion_protection = bool
     source_snapshot     = optional(string)
     version             = string
-    instance_class      = any
+    instance_class      = string
   })
 }
 variable "md_metadata" {
