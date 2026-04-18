@@ -10,6 +10,11 @@ locals {
       threshold = floor(local._cluster_volume_bytes_max_bytes * local._cluster_volume_bytes_max_threshold_percent)
       statistic = "Maximum"
     }
+    acu_utilization = {
+      period    = 300
+      threshold = 90
+      statistic = "Average"
+    }
   }
   alarms_map = {
     "AUTOMATED" = local.automated_alarms
@@ -23,14 +28,14 @@ locals {
 }
 
 module "alarm_channel" {
-  source      = "github.com/massdriver-cloud/terraform-modules//aws/alarm-channel?ref=f3163aa"
+  source      = "massdriver-cloud/aws-alarm-channel/massdriver"
   md_metadata = var.md_metadata
 }
 
 module "cluster_volume_bytes_used" {
   count = lookup(local.alarms, "cluster_volume_bytes_used", null) == null ? 0 : 1
 
-  source        = "github.com/massdriver-cloud/terraform-modules//aws/cloudwatch-alarm?ref=f3163aa"
+  source        = "massdriver-cloud/aws-metric-alarm/massdriver"
   sns_topic_arn = module.alarm_channel.arn
   depends_on = [
     aws_rds_cluster.main
@@ -47,6 +52,32 @@ module "cluster_volume_bytes_used" {
   statistic           = local.alarms.cluster_volume_bytes_used.statistic
   period              = local.alarms.cluster_volume_bytes_used.period
   threshold           = local.alarms.cluster_volume_bytes_used.threshold
+
+  dimensions = {
+    DBClusterIdentifier = aws_rds_cluster.main.cluster_identifier
+  }
+}
+
+module "acu_utilization" {
+  count = local.is_serverless && lookup(local.alarms, "acu_utilization", null) != null ? 1 : 0
+
+  source        = "massdriver-cloud/aws-metric-alarm/massdriver"
+  sns_topic_arn = module.alarm_channel.arn
+  depends_on = [
+    aws_rds_cluster.main
+  ]
+
+  md_metadata         = var.md_metadata
+  display_name        = "ACU Utilization"
+  message             = "RDS Aurora ${aws_rds_cluster.main.cluster_identifier}: ACU Utilization has exceeded ${local.alarms.acu_utilization.threshold}%"
+  alarm_name          = "${aws_rds_cluster.main.cluster_identifier}-highACUUtilization"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 1
+  metric_name         = "ACUUtilization"
+  namespace           = "AWS/RDS"
+  statistic           = local.alarms.acu_utilization.statistic
+  period              = local.alarms.acu_utilization.period
+  threshold           = local.alarms.acu_utilization.threshold
 
   dimensions = {
     DBClusterIdentifier = aws_rds_cluster.main.cluster_identifier
