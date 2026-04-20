@@ -32,6 +32,10 @@ variable "database" {
     source_snapshot     = optional(string)
     version             = string
     instance_class      = any
+    serverless_scaling = optional(object({
+      max_capacity = number
+      min_capacity = number
+    }))
   })
 }
 variable "md_metadata" {
