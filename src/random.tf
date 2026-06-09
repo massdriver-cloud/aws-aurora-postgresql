@@ -9,7 +9,7 @@ resource "random_pet" "root_username" {
 resource "random_password" "root_password" {
   length      = 16
   lower       = true
-  number      = true
+  numeric     = true
   special     = false
   upper       = true
   min_lower   = 1
