@@ -13,10 +13,8 @@ variable "availability" {
 }
 variable "aws_authentication" {
   type = object({
-    data = object({
-      arn         = string
-      external_id = optional(string)
-    })
+    arn         = string
+    external_id = string
   })
 }
 variable "backup" {
