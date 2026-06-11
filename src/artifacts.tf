@@ -1,23 +1,23 @@
 locals {
-  writer_data_authentication = {
+  writer_authentication = {
     username = aws_rds_cluster.main.master_username
     password = aws_rds_cluster.main.master_password
     hostname = aws_rds_cluster.main.endpoint
     port     = local.postgresql.port
   }
 
-  readers_data_authentication = {
+  readers_authentication = {
     username = aws_rds_cluster.main.master_username
     password = aws_rds_cluster.main.master_password
     hostname = aws_rds_cluster.main.reader_endpoint
     port     = local.postgresql.port
   }
 
-  data_infrastructure = {
+  infrastructure = {
     arn = aws_rds_cluster.main.arn
   }
 
-  data_security = {
+  security = {
     network = {
       postgresql = {
         arn      = aws_security_group.main.arn
@@ -35,15 +35,13 @@ locals {
 }
 
 resource "massdriver_artifact" "writer" {
-  field                = "writer"
-  name                 = "PostgreSQL Primary (writer): ${aws_rds_cluster.main.arn}"
+  field    = "writer"
+  name     = "PostgreSQL Primary (writer): ${aws_rds_cluster.main.arn}"
   artifact = jsonencode(
     {
-      data = {
-        infrastructure = local.data_infrastructure
-        authentication = local.writer_data_authentication
-        security       = local.data_security
-      }
+      infrastructure = local.infrastructure
+      authentication = local.writer_authentication
+      security       = local.security
       specs = {
         rdbms = local.rdbms_specs
       }
@@ -52,15 +50,13 @@ resource "massdriver_artifact" "writer" {
 }
 
 resource "massdriver_artifact" "readers" {
-  field                = "readers"
-  name                 = "PostgreSQL Replicas (reader): ${aws_rds_cluster.main.arn}"
+  field    = "readers"
+  name     = "PostgreSQL Replicas (reader): ${aws_rds_cluster.main.arn}"
   artifact = jsonencode(
     {
-      data = {
-        infrastructure = local.data_infrastructure
-        authentication = local.readers_data_authentication
-        security       = local.data_security
-      }
+      infrastructure = local.infrastructure
+      authentication = local.readers_authentication
+      security       = local.security
       specs = {
         rdbms = local.rdbms_specs
       }

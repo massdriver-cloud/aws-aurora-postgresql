@@ -14,7 +14,7 @@ variable "availability" {
 variable "aws_authentication" {
   type = object({
     arn         = string
-    external_id = string
+    external_id = optional(string)
   })
 }
 variable "backup" {
@@ -71,20 +71,18 @@ variable "observability" {
 }
 variable "vpc" {
   type = object({
-    data = object({
-      infrastructure = object({
-        arn  = string
-        cidr = string
-        internal_subnets = list(object({
-          arn = string
-        }))
-        private_subnets = list(object({
-          arn = string
-        }))
-        public_subnets = list(object({
-          arn = string
-        }))
-      })
+    infrastructure = object({
+      arn  = string
+      cidr = string
+      internal_subnets = list(object({
+        arn = string
+      }))
+      private_subnets = list(object({
+        arn = string
+      }))
+      public_subnets = list(object({
+        arn = string
+      }))
     })
     specs = optional(object({
       aws = optional(object({
