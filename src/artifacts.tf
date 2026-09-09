@@ -34,10 +34,10 @@ locals {
   }
 }
 
-resource "massdriver_artifact" "writer" {
+resource "massdriver_resource" "writer" {
   field    = "writer"
   name     = "PostgreSQL Primary (writer): ${aws_rds_cluster.main.arn}"
-  artifact = jsonencode(
+  resource = jsonencode(
     {
       infrastructure = local.infrastructure
       authentication = local.writer_authentication
@@ -49,10 +49,10 @@ resource "massdriver_artifact" "writer" {
   )
 }
 
-resource "massdriver_artifact" "readers" {
+resource "massdriver_resource" "readers" {
   field    = "readers"
   name     = "PostgreSQL Replicas (reader): ${aws_rds_cluster.main.arn}"
-  artifact = jsonencode(
+  resource = jsonencode(
     {
       infrastructure = local.infrastructure
       authentication = local.readers_authentication

@@ -1,6 +1,6 @@
 schema: draft-07
 name: aws-aurora-postgresql
-version: 1.0.3
+version: 1.0.4
 description: Amazon Aurora is a fully managed relational database engine that's compatible with PostgreSQL. Aurora includes a high-performance storage subsystem. Its PostgreSQL-compatible database engines are customized to take advantage of that fast distributed storage. The underlying storage grows automatically as needed. An Aurora cluster volume can grow to a maximum size of 128 tebibytes (TiB). Aurora also automates and standardizes database clustering and replication, which are typically among the most challenging aspects of database configuration and administration.
 source_url: https://github.com/massdriver-cloud/aws-aurora-postgresql
 steps:
@@ -226,9 +226,17 @@ params:
       - retention_period
       properties:
         skip_final_snapshot:
-          "$ref": https://raw.githubusercontent.com/massdriver-cloud/json-schemas/main/aws/rds/skip_final_snapshot.json
+          title: Skip Final Snapshot
+          description: Determines whether a final DB snapshot is created before the DB cluster is deleted. If true is specified, no DB snapshot is created.
+          type: boolean
+          default: false
         retention_period:
-          "$ref": https://raw.githubusercontent.com/massdriver-cloud/json-schemas/main/aws/rds/backup_retention_period.json
+          title: Backup Retention Period
+          description: The days to retain backups for.
+          type: integer
+          default: 7
+          minimum: 1
+          maximum: 35
     database:
       title: Database
       type: object
@@ -239,11 +247,13 @@ params:
       - ca_cert_identifier
       properties:
         source_snapshot:
+          type: string
           "$md.immutable": true
           title: Restore from Snapshot (ARN)
           description: Cluster or database snapshot ARN. Specifies whether or not to **create** this cluster from a snapshot. Aurora clusters can be restored from cluster snapshots *or* database snapshots. [Learn more](https://docs.massdriver.cloud/runbook/aws/migrating-rds-databases)
-          "$ref": https://raw.githubusercontent.com/massdriver-cloud/artifact-definitions/main/definitions/types/aws-arn.json
           pattern: "^arn:aws:rds:[a-zA-Z0-9._-]*:[0-9]{12}:(cluster-snapshot|snapshot):[a-zA-Z0-9/._-]+$"
+          message:
+            pattern: 'Correct format of an arn described here: https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html'
         ca_cert_identifier:
           title: SSL/TLS Encryption
           description: The identifier of the CA certificate for the DB instances. [Learn more](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html).
@@ -302,7 +312,10 @@ params:
           - '17.4'
           default: '17.4'
         deletion_protection:
-          "$ref": https://raw.githubusercontent.com/massdriver-cloud/json-schemas/main/aws/rds/deletion_protection.json
+          title: Deletion Protection
+          description: Explicitly requires this field to be unset before allowing deletion.
+          type: boolean
+          default: true
       if:
         properties:
           instance_class:
@@ -312,7 +325,29 @@ params:
         - serverless_scaling
         properties:
           serverless_scaling:
-            "$ref": https://raw.githubusercontent.com/massdriver-cloud/json-schemas/main/aws/rds/aurora/serverlessv2_scaling_configuration.json
+            title: Aurora V2 Serverless Scaling
+            description: Each ACU is a combination of approximately 2 gibibytes (GiB) of memory, corresponding CPU, and networking. [Learn more](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-serverless-v2.how-it-works.html)
+            type: object
+            required:
+            - min_capacity
+            - max_capacity
+            properties:
+              min_capacity:
+                title: Minimum ACUs
+                description: Minimum _Aurora Capacity Units_.
+                type: number
+                multipleOf: 0.5
+                default: 1
+                minimum: 0
+                maximum: 128
+              max_capacity:
+                title: Maximum ACUs
+                type: number
+                description: Maximum _Aurora Capacity Units_. **Must** be greater than `min_capacity`.
+                multipleOf: 0.5
+                minimum: 0.5
+                default: 2
+                maximum: 128
       dependencies:
         version:
           oneOf:
@@ -521,7 +556,13 @@ params:
       type: object
       properties:
         subnet_type:
-          "$ref": https://raw.githubusercontent.com/massdriver-cloud/json-schemas/main/massdriver/properties/networking/aws/subnet_type.json
+          title: Subnet Type
+          description: Deploy to internal subnets (cannot reach the internet) or private subnets (internet egress traffic allowed)
+          type: string
+          enum:
+          - internal
+          - private
+          default: internal
   "$defs":
     instance-class-group-628e4e013f9b75c97b18b39beb76cbaec9c4191b5ee56c5943a1b65daf3774d1:
       title: Instance Class
@@ -1223,24 +1264,23 @@ params:
       oneOf:
       - title: Serverless 2GiB / 1 ACU (db.serverless)
         const: db.serverless
-connections:
-  required:
-  - vpc
-  - aws_authentication
-  properties:
-    vpc:
-      "$ref": aws-vpc
-    aws_authentication:
-      "$ref": aws-iam-role
-artifacts:
-  required:
-  - writer
-  - readers
-  properties:
-    writer:
-      "$ref": postgresql-authentication
-    readers:
-      "$ref": postgresql-authentication
+
+dependencies:
+  vpc:
+    resource_type: aws-vpc-resource
+    required: true
+  aws_authentication:
+    resource_type: aws-iam-role
+    required: true
+
+resources:
+  writer:
+    resource_type: postgresql-authentication
+    required: true
+  readers:
+    resource_type: postgresql-authentication
+    required: true
+
 ui:
   ui:order:
   - database
