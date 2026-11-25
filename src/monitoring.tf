@@ -29,6 +29,7 @@ locals {
 
 module "alarm_channel" {
   source      = "massdriver-cloud/aws-alarm-channel/massdriver"
+  version     = "~> 0.1.0"
   md_metadata = var.md_metadata
 }
 
@@ -36,6 +37,7 @@ module "cluster_volume_bytes_used" {
   count = lookup(local.alarms, "cluster_volume_bytes_used", null) == null ? 0 : 1
 
   source        = "massdriver-cloud/aws-metric-alarm/massdriver"
+  version       = "~> 1.0"
   sns_topic_arn = module.alarm_channel.arn
   depends_on = [
     aws_rds_cluster.main
@@ -62,6 +64,7 @@ module "acu_utilization" {
   count = local.is_serverless && lookup(local.alarms, "acu_utilization", null) != null ? 1 : 0
 
   source        = "massdriver-cloud/aws-metric-alarm/massdriver"
+  version       = "~> 1.0"
   sns_topic_arn = module.alarm_channel.arn
   depends_on = [
     aws_rds_cluster.main
