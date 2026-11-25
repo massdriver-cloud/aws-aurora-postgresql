@@ -35,8 +35,8 @@ locals {
 }
 
 resource "massdriver_resource" "writer" {
-  field    = "writer"
-  name     = "PostgreSQL Primary (writer): ${aws_rds_cluster.main.arn}"
+  field = "writer"
+  name  = "PostgreSQL Primary (writer): ${aws_rds_cluster.main.arn}"
   resource = jsonencode(
     {
       infrastructure = local.infrastructure
@@ -50,8 +50,8 @@ resource "massdriver_resource" "writer" {
 }
 
 resource "massdriver_resource" "readers" {
-  field    = "readers"
-  name     = "PostgreSQL Replicas (reader): ${aws_rds_cluster.main.arn}"
+  field = "readers"
+  name  = "PostgreSQL Replicas (reader): ${aws_rds_cluster.main.arn}"
   resource = jsonencode(
     {
       infrastructure = local.infrastructure
